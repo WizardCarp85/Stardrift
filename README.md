@@ -146,6 +146,4 @@ DEBUG=True
 - Upload images / PDFs / text files of handwritten dream logs
 - OCR + embedding pipeline (pgvector + RAG)
 - Theme/symbol clustering (k-means over embeddings)
-- Sleep-cycle correlation + wearable data import
-- Push/email reminders
 - Monthly PDF dream report export

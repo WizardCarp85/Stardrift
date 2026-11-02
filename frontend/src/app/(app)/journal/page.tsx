@@ -233,9 +233,9 @@ export default function JournalPage() {
           </div>
           <Link href="/journal/new" className="jr-btn-primary px-5 py-3 text-sm">
             <span className="flex h-6 w-6 items-center justify-center rounded-lg border-2 border-[#081326] bg-[#ffe082]">
-              <Plus size={14} strokeWidth={3} className="text-[#081326]" />
+              <Mic size={14} strokeWidth={2.8} className="text-[#081326]" />
             </span>
-            New Dream
+            Record a Dream
           </Link>
         </div>
       </section>
@@ -351,7 +351,7 @@ export default function JournalPage() {
                 </button>
               ) : (
                 <Link href="/journal/new" className="jr-btn-primary px-5 py-3 text-sm">
-                  <Plus size={16} strokeWidth={2.8} /> Log your first dream
+                  <Mic size={16} strokeWidth={2.8} /> Record your first dream
                 </Link>
               )}
             </div>

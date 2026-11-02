@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   BookOpen,
   Plus,
+  Mic,
   Sparkles,
   User as UserIcon,
   Settings,
@@ -368,7 +369,7 @@ export function Sidebar() {
         </Link>
       </div>
 
-      {/* Primary Action: Log a Dream */}
+      {/* Primary Action: Record a Dream */}
       <div className="px-3.5 pt-2 pb-4">
         <Link
           href="/journal/new"
@@ -384,16 +385,16 @@ export function Sidebar() {
               isNewDreamPage ? "bg-white" : "bg-[#ffe082]"
             } ${collapsed ? "h-8 w-8 border-none shadow-none bg-transparent" : "h-9 w-9"}`}
           >
-            <Plus size={19} className="text-[#081326]" strokeWidth={2.8} />
+            <Mic size={19} className="text-[#081326]" strokeWidth={2.6} />
           </span>
 
           {!collapsed && (
             <div className="min-w-0 text-left">
               <span className="block text-sm font-extrabold leading-tight text-[#081326]">
-                Log a Dream
+                Record a Dream
               </span>
               <span className="block truncate text-[11px] font-bold text-[#081326]/75">
-                {isNewDreamPage ? "Currently writing…" : "Write or voice note"}
+                {isNewDreamPage ? "Recording…" : "Voice first or write"}
               </span>
             </div>
           )}
@@ -404,7 +405,7 @@ export function Sidebar() {
               role="tooltip"
               className="pointer-events-none invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-150 absolute left-[calc(100%+14px)] top-1/2 -translate-y-1/2 whitespace-nowrap rounded-xl border-2 border-[#081326] bg-[#ffe082] px-3 py-1.5 text-xs font-extrabold text-[#081326] shadow-[0_3px_0_0_#081326] z-50"
             >
-              Log a Dream
+              Record a Dream
             </span>
           )}
         </Link>
@@ -633,11 +634,11 @@ export function MobileTabBar() {
           );
         })}
 
-        {/* Raised Center Cartoon Medallion: + New Dream */}
+        {/* Raised Center Cartoon Medallion: Voice Record Dream */}
         <div className="flex flex-col items-center justify-end">
           <Link
             href="/journal/new"
-            aria-label="Log a new dream"
+            aria-label="Record a new dream"
             aria-current={isNewDreamPage ? "page" : undefined}
             className="group flex flex-col items-center gap-1 focus-visible:outline-none"
           >
@@ -649,7 +650,7 @@ export function MobileTabBar() {
               }`}
               style={{ width: "52px", height: "52px" }}
             >
-              <Plus size={25} strokeWidth={3} />
+              <Mic size={24} strokeWidth={2.6} />
             </span>
             <span
               className={`pb-1 text-[11px] leading-none ${
@@ -658,7 +659,7 @@ export function MobileTabBar() {
                   : "font-extrabold text-[#7ac8ff]"
               }`}
             >
-              New
+              Record
             </span>
           </Link>
         </div>

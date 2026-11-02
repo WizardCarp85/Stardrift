@@ -502,8 +502,8 @@ export default function LandingPage() {
                     href="/journal/new"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-base font-bold px-7 py-3.5 rounded-2xl cartoon-btn-secondary"
                   >
-                    <Plus size={18} className="text-[#6bc2ff]" strokeWidth={2.5} />
-                    Log tonight&apos;s dream
+                    <Mic size={18} className="text-[#6bc2ff]" strokeWidth={2.5} />
+                    Record tonight&apos;s dream
                   </Link>
                 </>
               ) : (

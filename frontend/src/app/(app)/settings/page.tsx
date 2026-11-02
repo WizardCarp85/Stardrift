@@ -89,7 +89,7 @@ const FONT = "'Quicksand', ui-rounded, 'Nunito', sans-serif";
 const STORAGE_KEY = "stardrift_app_settings_v2";
 
 const DEFAULT_SETTINGS: SettingsState = {
-  defaultLogMode: "text",
+  defaultLogMode: "voice",
   defaultDreamType: "normal",
   defaultSleepQuality: 0,
   voiceLanguage: "en-US",
@@ -1128,8 +1128,8 @@ export default function SettingsPage() {
                 <SettingRow title="Default recording method" description="Choose the capture screen you want to see first.">
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { value: "text" as const, label: "Write", icon: PenTool, color: "#5bb8ff" },
                       { value: "voice" as const, label: "Voice", icon: Mic, color: "#ffe082" },
+                      { value: "text" as const, label: "Write", icon: PenTool, color: "#5bb8ff" },
                     ].map((option) => {
                       const Icon = option.icon;
                       const selected = settings.defaultLogMode === option.value;

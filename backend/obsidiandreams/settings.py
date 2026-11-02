@@ -1,1 +1,0 @@
-from stardrift.settings import *

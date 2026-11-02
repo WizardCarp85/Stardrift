@@ -26,6 +26,7 @@ import {
   Loader2,
   Moon,
   Plus,
+  Mic,
   Quote,
   RefreshCw,
   Repeat,
@@ -570,9 +571,9 @@ export default function PatternsPage() {
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link href="/journal/new" className="pattern-btn-primary rounded-2xl px-5 py-3 text-sm">
                 <span className="flex h-6 w-6 items-center justify-center rounded-lg border-2 border-[#081326] bg-[#ffe082]">
-                  <Plus size={14} strokeWidth={3} />
+                  <Mic size={14} strokeWidth={2.8} />
                 </span>
-                Log another dream
+                Record a dream
               </Link>
 
               <Link href="/journal" className="pattern-btn-secondary rounded-2xl px-5 py-3 text-sm">
@@ -748,8 +749,8 @@ export default function PatternsPage() {
               </p>
             </div>
             <Link href="/journal/new" className="pattern-btn-primary rounded-2xl px-5 py-3 text-sm">
-              <Plus size={16} strokeWidth={2.8} />
-              Log your first dream
+              <Mic size={16} strokeWidth={2.8} />
+              Record your first dream
             </Link>
           </div>
         </section>

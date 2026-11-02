@@ -34,7 +34,7 @@ class UserProfile(models.Model):
     recall_habit = models.CharField(max_length=50, blank=True, default="wake")
 
     # Capture & Journal preferences
-    default_log_mode = models.CharField(max_length=10, default="text")
+    default_log_mode = models.CharField(max_length=10, default="voice")
     default_dream_type = models.CharField(max_length=20, default="normal")
     default_sleep_quality = models.IntegerField(default=0)
     voice_language = models.CharField(max_length=20, default="en-US")

@@ -89,7 +89,7 @@ interface DreamFormProps {
 export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
   const router = useRouter();
   const [inputMode, setInputMode] = useState<"type" | "speak">(
-    initialData?.input_method === "voice" ? "speak" : "type"
+    initialData?.input_method === "text" ? "type" : "speak"
   );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -112,7 +112,7 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
     sleep_quality: null,
     is_lucid: false,
     is_recurring: false,
-    input_method: "text",
+    input_method: initialData?.input_method || "voice",
     tags: [],
     ...initialData,
   }));
@@ -132,9 +132,10 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
 
         // Apply default log mode
         const defaultMode = profile.default_log_mode || profile.defaultLogMode;
-        if (!initialData?.input_method && defaultMode) {
-          setInputMode(defaultMode === "voice" ? "speak" : "type");
-          update("input_method", defaultMode === "voice" ? "voice" : "text");
+        if (!initialData?.input_method) {
+          const isText = defaultMode === "text";
+          setInputMode(isText ? "type" : "speak");
+          update("input_method", isText ? "text" : "voice");
         }
 
         // Apply default dream type
@@ -155,9 +156,10 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
       } catch {
         // Fallback to localStorage if offline
         const localLogMode = window.localStorage.getItem("stardrift_default_log_mode");
-        if (!initialData?.input_method && localLogMode === "voice") {
-          setInputMode("speak");
-          update("input_method", "voice");
+        if (!initialData?.input_method) {
+          const isText = localLogMode === "text";
+          setInputMode(isText ? "type" : "speak");
+          update("input_method", isText ? "text" : "voice");
         }
       }
     }
@@ -192,7 +194,7 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
           sleep_quality: null,
           is_lucid: false,
           is_recurring: false,
-          input_method: "text",
+          input_method: "voice",
           tags: [],
         });
       }
@@ -357,7 +359,7 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
           </div>
 
           <div className="inline-flex rounded-xl border-2 border-[#081326] bg-[#0e2040] p-1 shadow-[0_2px_0_0_#081326]">
-            {(["type", "speak"] as const).map((m) => {
+            {(["speak", "type"] as const).map((m) => {
               const active = inputMode === m;
               return (
                 <button
@@ -373,8 +375,8 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
                       : "text-[#8cb2e0] hover:text-white border-2 border-transparent"
                   }`}
                 >
-                  {m === "type" ? <Type size={13} strokeWidth={2.8} /> : <Mic size={13} strokeWidth={2.8} />}
-                  {m === "type" ? "Type it out" : "Speak it out"}
+                  {m === "speak" ? <Mic size={13} strokeWidth={2.8} /> : <Type size={13} strokeWidth={2.8} />}
+                  {m === "speak" ? "Record with Voice" : "Type it out"}
                 </button>
               );
             })}
@@ -418,9 +420,16 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
 
         {/* Dream Body / Voice Panel */}
         <div className="mt-4">
-          <label htmlFor="dream-body" className="block text-sm font-extrabold text-[#cfe3fc] mb-1.5">
-            What happened in the dream? <span className="text-[#ffe082]">*</span>
-          </label>
+          <div className="flex items-center justify-between mb-1.5">
+            <label htmlFor={inputMode === "speak" ? "dream-body-voice" : "dream-body"} className="block text-sm font-extrabold text-[#cfe3fc]">
+              {inputMode === "speak" ? "Record your dream" : "What happened in the dream?"} <span className="text-[#ffe082]">*</span>
+            </label>
+            {inputMode === "speak" && (
+              <span className="text-[11px] font-bold text-[#ffe082] flex items-center gap-1">
+                <Sparkles size={12} /> Voice-First Mode
+              </span>
+            )}
+          </div>
 
           {inputMode === "speak" ? (
             <div className="rounded-2xl border-2 border-[#081326] bg-[#0e2040] p-4 flex flex-col items-center gap-4 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]">
@@ -431,7 +440,9 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
                   <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7ea4d4]">
                     Live Transcript (Editable)
                   </span>
-                  <span className="text-[10px] font-bold text-[#64dfd0]">Voice detected</span>
+                  <span className="text-[10px] font-bold text-[#64dfd0]">
+                    {form.body ? "Voice transcribed" : "Voice detected"}
+                  </span>
                 </div>
                 <textarea
                   id="dream-body-voice"
@@ -439,8 +450,9 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
                   onChange={(e) => handleBodyChange(e.target.value)}
                   className="cartoon-form-input text-sm leading-relaxed"
                   rows={5}
-                  placeholder="Your words will transcribe here as you speak…"
+                  placeholder="Your words will transcribe here as you speak… or tap here to edit anytime."
                   style={{ resize: "vertical" }}
+                  required
                 />
               </div>
             </div>

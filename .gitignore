@@ -34,3 +34,10 @@ yarn-error.log*
 .DS_Store
 .idea/
 .vscode/
+
+# Temporary & Scratch Files
+TEMP_*.md
+temp_*.md
+TEMP_FEATURE_STATUS.md
+*.tmp
+

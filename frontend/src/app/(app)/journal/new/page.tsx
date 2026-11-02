@@ -12,14 +12,14 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "New Dream — Stardrift",
-  description: "Log a new dream entry in your private dream journal",
+  title: "Record Dream — Stardrift",
+  description: "Record a new dream entry via voice or text in your private dream journal",
 };
 
 const TIPS = [
-  { icon: Feather, bg: "#5bb8ff", title: "Write freely", desc: "Fragments count — colors, faces, and feelings are enough." },
-  { icon: Tag, bg: "#64dfd0", title: "Tag the mood", desc: "Moods and themes power your pattern map later on." },
-  { icon: Mic, bg: "#ffe082", title: "Too sleepy?", desc: "Speak it out loud and tidy up the details later." },
+  { icon: Mic, bg: "#ffe082", title: "Speak it out", desc: "Speak while still half-awake — voice dictation captures fleeting details instantly." },
+  { icon: Feather, bg: "#5bb8ff", title: "Edit freely", desc: "Touch up words, add a title, or polish fragments anytime." },
+  { icon: Tag, bg: "#64dfd0", title: "Tag the mood", desc: "Moods and themes power your subconscious pattern map." },
 ];
 
 export default function NewDreamPage() {
@@ -44,14 +44,14 @@ export default function NewDreamPage() {
         <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-xl">
             <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border-2 border-[#081326] bg-[#0e2040] px-3 py-1 text-xs font-extrabold text-[#7ac8ff] shadow-[0_2px_0_0_#081326]">
-              <Sparkles size={13} className="text-[#ffe082]" />
-              Fresh page
+              <Mic size={13} className="text-[#ffe082]" />
+              Voice-first log
             </span>
             <h1 className="mb-2 text-2xl font-extrabold tracking-tight text-white [text-shadow:0_3px_0_#081326] sm:text-3xl">
-              Capture tonight&apos;s dream
+              Record tonight&apos;s dream
             </h1>
             <p className="text-sm font-semibold leading-relaxed text-[#bad4f7]">
-              Write it down while it&apos;s still vivid — details fade within minutes of waking. Nothing here is shared; this page is yours alone.
+              Speak or write while it&apos;s still fresh — details fade within minutes of waking. Tap the mic to record or switch to typing anytime.
             </p>
           </div>
 

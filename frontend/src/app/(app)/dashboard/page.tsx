@@ -13,6 +13,7 @@ import {
   RefreshCw,
   AlertTriangle,
   Plus,
+  Mic,
   Compass,
   Feather,
   Calendar,
@@ -470,9 +471,9 @@ export default function DashboardPage() {
           <div className="flex flex-wrap items-center gap-3">
             <Link href="/journal/new" className="dash-btn-primary inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-extrabold">
               <span className="flex h-6 w-6 items-center justify-center rounded-lg border-2 border-[#081326] bg-[#ffe082]">
-                <Plus size={14} strokeWidth={3} className="text-[#081326]" />
+                <Mic size={14} strokeWidth={2.8} className="text-[#081326]" />
               </span>
-              Log a Dream
+              Record a Dream
             </Link>
 
             <Link href="/journal" className="dash-btn-secondary inline-flex items-center gap-1.5 rounded-2xl px-4 py-3 text-sm font-extrabold">
@@ -770,8 +771,8 @@ export default function DashboardPage() {
               href="/journal/new"
               className="dash-btn-primary relative z-10 inline-flex items-center gap-2 self-start rounded-xl px-4 py-2.5 text-xs font-extrabold"
             >
-              <Plus size={15} strokeWidth={2.8} />
-              Write your first entry
+              <Mic size={15} strokeWidth={2.8} />
+              Record your first entry
             </Link>
           </div>
         )}
@@ -818,12 +819,12 @@ export default function DashboardPage() {
           href="/journal/new"
           className="dash-cartoon-card dash-cartoon-lift group flex items-center gap-3.5 rounded-2xl bg-[#162f5c] p-4"
         >
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#5bb8ff] shadow-[0_3px_0_0_#081326] transition-transform group-hover:-rotate-6">
-            <Plus size={20} className="text-[#081326]" strokeWidth={2.8} />
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#ffe082] shadow-[0_3px_0_0_#081326] transition-transform group-hover:-rotate-6">
+            <Mic size={20} className="text-[#081326]" strokeWidth={2.6} />
           </span>
           <div className="min-w-0 flex-1">
-            <span className="block text-sm font-extrabold text-white">Log Tonight&apos;s Dream</span>
-            <span className="block truncate text-xs font-bold text-[#9bc0ed]">Text or voice note</span>
+            <span className="block text-sm font-extrabold text-white">Record Tonight&apos;s Dream</span>
+            <span className="block truncate text-xs font-bold text-[#9bc0ed]">Voice-first or write</span>
           </div>
           <ChevronRight size={18} className="shrink-0 text-[#6bc2ff] transition-transform group-hover:translate-x-1" />
         </Link>
