@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import {
   BookOpen,
   Plus,
   Mic,
+  PenTool,
   Sparkles,
   User as UserIcon,
   Settings,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 import { getSupabaseClient } from "@/lib/supabase";
 import { profileApi } from "@/lib/api";
+import { subscribeCaptureState, type CaptureStateDetail } from "@/lib/captureState";
 import type { User } from "@supabase/supabase-js";
 
 const BRAND = { first: "Star", second: "drift" };
@@ -206,6 +208,91 @@ export function Sidebar() {
 
   const isNewDreamPage = pathname === "/journal/new";
 
+  const [captureState, setCaptureState] = useState<CaptureStateDetail>({
+    mode: "speak",
+    isListening: false,
+  });
+
+  useEffect(() => {
+    return subscribeCaptureState((state) => {
+      setCaptureState(state);
+    });
+  }, []);
+
+  const actionButton = useMemo(() => {
+    if (!isNewDreamPage) {
+      return {
+        bg: "bg-[#5bb8ff] hover:bg-[#74c5ff] text-[#081326]",
+        ring: "focus-visible:ring-[#ffe082]",
+        badgeBg: "bg-[#ffe082]",
+        title: "Record a Dream",
+        subtitle: "Voice first or write",
+        tooltip: "Record a Dream",
+        mobileLabel: "Record",
+        mobileColor: "text-[#7ac8ff]",
+        mobileMedallionBg: "bg-[#5bb8ff] text-[#081326]",
+        icon: <Mic size={19} className="text-[#081326]" strokeWidth={2.6} />,
+        mobileIcon: <Mic size={24} strokeWidth={2.6} />,
+      };
+    }
+
+    if (captureState.mode === "type") {
+      return {
+        bg: "bg-[#64dfd0] hover:bg-[#78e8dc] text-[#081326]",
+        ring: "focus-visible:ring-[#64dfd0]",
+        badgeBg: "bg-white",
+        title: "Writing Dream",
+        subtitle: "Typing mode active",
+        tooltip: "Writing Dream (Active)",
+        mobileLabel: "Writing",
+        mobileColor: "text-[#64dfd0]",
+        mobileMedallionBg: "bg-[#64dfd0] text-[#081326]",
+        icon: <PenTool size={18} className="text-[#081326]" strokeWidth={2.6} />,
+        mobileIcon: <PenTool size={22} strokeWidth={2.6} />,
+      };
+    }
+
+    if (captureState.isListening) {
+      return {
+        bg: "bg-[#ff859d] hover:bg-[#ff9bb0] text-[#081326]",
+        ring: "focus-visible:ring-[#ff859d]",
+        badgeBg: "bg-white",
+        title: "Listening…",
+        subtitle: "Transcribing your voice…",
+        tooltip: "Listening to your voice…",
+        mobileLabel: "Listening",
+        mobileColor: "text-[#ff859d]",
+        mobileMedallionBg: "bg-[#ff859d] text-[#081326]",
+        icon: (
+          <span className="relative flex items-center justify-center">
+            <span className="absolute h-5 w-5 rounded-full bg-[#ff3366]/40 animate-ping" />
+            <Mic size={19} className="text-[#081326]" strokeWidth={2.8} />
+          </span>
+        ),
+        mobileIcon: (
+          <span className="relative flex items-center justify-center">
+            <span className="absolute h-6 w-6 rounded-full bg-[#ff3366]/40 animate-ping" />
+            <Mic size={24} strokeWidth={2.8} />
+          </span>
+        ),
+      };
+    }
+
+    return {
+      bg: "bg-[#ffe082] hover:bg-[#ffea9f] text-[#081326]",
+      ring: "focus-visible:ring-[#ffe082]",
+      badgeBg: "bg-white",
+      title: "Voice Recording",
+      subtitle: "Voice mode active",
+      tooltip: "Voice Recording (Active)",
+      mobileLabel: "Voice",
+      mobileColor: "text-[#ffe082]",
+      mobileMedallionBg: "bg-[#ffe082] text-[#081326]",
+      icon: <Mic size={19} className="text-[#081326]" strokeWidth={2.6} />,
+      mobileIcon: <Mic size={24} strokeWidth={2.6} />,
+    };
+  }, [isNewDreamPage, captureState]);
+
   const isRouteActive = (href: string) => {
     if (href === "/journal") {
       return (
@@ -369,32 +456,30 @@ export function Sidebar() {
         </Link>
       </div>
 
-      {/* Primary Action: Record a Dream */}
+      {/* Primary Action Button */}
       <div className="px-3.5 pt-2 pb-4">
         <Link
           href="/journal/new"
           aria-current={isNewDreamPage ? "page" : undefined}
-          className={`group relative flex items-center rounded-2xl cartoon-cta-new focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffe082] ${
-            isNewDreamPage
-              ? "bg-[#ffe082] text-[#081326]"
-              : "bg-[#5bb8ff] hover:bg-[#74c5ff] text-[#081326]"
-          } ${collapsed ? "h-12 w-12 mx-auto justify-center" : "gap-3 px-3.5 py-2.5"}`}
+          className={`group relative flex items-center rounded-2xl cartoon-cta-new focus-visible:outline-none focus-visible:ring-2 ${actionButton.ring} ${actionButton.bg} ${
+            collapsed ? "h-12 w-12 mx-auto justify-center" : "gap-3 px-3.5 py-2.5"
+          }`}
         >
           <span
-            className={`flex shrink-0 items-center justify-center rounded-xl border-2 border-[#081326] shadow-[0_2px_0_0_#081326] transition-transform group-hover:scale-105 ${
-              isNewDreamPage ? "bg-white" : "bg-[#ffe082]"
-            } ${collapsed ? "h-8 w-8 border-none shadow-none bg-transparent" : "h-9 w-9"}`}
+            className={`flex shrink-0 items-center justify-center rounded-xl border-2 border-[#081326] shadow-[0_2px_0_0_#081326] transition-transform group-hover:scale-105 ${actionButton.badgeBg} ${
+              collapsed ? "h-8 w-8 border-none shadow-none bg-transparent" : "h-9 w-9"
+            }`}
           >
-            <Mic size={19} className="text-[#081326]" strokeWidth={2.6} />
+            {actionButton.icon}
           </span>
 
           {!collapsed && (
             <div className="min-w-0 text-left">
               <span className="block text-sm font-extrabold leading-tight text-[#081326]">
-                Record a Dream
+                {actionButton.title}
               </span>
               <span className="block truncate text-[11px] font-bold text-[#081326]/75">
-                {isNewDreamPage ? "Recording…" : "Voice first or write"}
+                {actionButton.subtitle}
               </span>
             </div>
           )}
@@ -405,7 +490,7 @@ export function Sidebar() {
               role="tooltip"
               className="pointer-events-none invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-150 absolute left-[calc(100%+14px)] top-1/2 -translate-y-1/2 whitespace-nowrap rounded-xl border-2 border-[#081326] bg-[#ffe082] px-3 py-1.5 text-xs font-extrabold text-[#081326] shadow-[0_3px_0_0_#081326] z-50"
             >
-              Record a Dream
+              {actionButton.tooltip}
             </span>
           )}
         </Link>
@@ -572,6 +657,91 @@ export function MobileTabBar() {
   const pathname = usePathname();
   const isNewDreamPage = pathname === "/journal/new";
 
+  const [captureState, setCaptureState] = useState<CaptureStateDetail>({
+    mode: "speak",
+    isListening: false,
+  });
+
+  useEffect(() => {
+    return subscribeCaptureState((state) => {
+      setCaptureState(state);
+    });
+  }, []);
+
+  const actionButton = useMemo(() => {
+    if (!isNewDreamPage) {
+      return {
+        bg: "bg-[#5bb8ff] hover:bg-[#74c5ff] text-[#081326]",
+        ring: "focus-visible:ring-[#ffe082]",
+        badgeBg: "bg-[#ffe082]",
+        title: "Record a Dream",
+        subtitle: "Voice first or write",
+        tooltip: "Record a Dream",
+        mobileLabel: "Record",
+        mobileColor: "text-[#7ac8ff]",
+        mobileMedallionBg: "bg-[#5bb8ff] text-[#081326]",
+        icon: <Mic size={19} className="text-[#081326]" strokeWidth={2.6} />,
+        mobileIcon: <Mic size={24} strokeWidth={2.6} />,
+      };
+    }
+
+    if (captureState.mode === "type") {
+      return {
+        bg: "bg-[#64dfd0] hover:bg-[#78e8dc] text-[#081326]",
+        ring: "focus-visible:ring-[#64dfd0]",
+        badgeBg: "bg-white",
+        title: "Writing Dream",
+        subtitle: "Typing mode active",
+        tooltip: "Writing Dream (Active)",
+        mobileLabel: "Writing",
+        mobileColor: "text-[#64dfd0]",
+        mobileMedallionBg: "bg-[#64dfd0] text-[#081326]",
+        icon: <PenTool size={18} className="text-[#081326]" strokeWidth={2.6} />,
+        mobileIcon: <PenTool size={22} strokeWidth={2.6} />,
+      };
+    }
+
+    if (captureState.isListening) {
+      return {
+        bg: "bg-[#ff859d] hover:bg-[#ff9bb0] text-[#081326]",
+        ring: "focus-visible:ring-[#ff859d]",
+        badgeBg: "bg-white",
+        title: "Listening…",
+        subtitle: "Transcribing your voice…",
+        tooltip: "Listening to your voice…",
+        mobileLabel: "Listening",
+        mobileColor: "text-[#ff859d]",
+        mobileMedallionBg: "bg-[#ff859d] text-[#081326]",
+        icon: (
+          <span className="relative flex items-center justify-center">
+            <span className="absolute h-5 w-5 rounded-full bg-[#ff3366]/40 animate-ping" />
+            <Mic size={19} className="text-[#081326]" strokeWidth={2.8} />
+          </span>
+        ),
+        mobileIcon: (
+          <span className="relative flex items-center justify-center">
+            <span className="absolute h-6 w-6 rounded-full bg-[#ff3366]/40 animate-ping" />
+            <Mic size={24} strokeWidth={2.8} />
+          </span>
+        ),
+      };
+    }
+
+    return {
+      bg: "bg-[#ffe082] hover:bg-[#ffea9f] text-[#081326]",
+      ring: "focus-visible:ring-[#ffe082]",
+      badgeBg: "bg-white",
+      title: "Voice Recording",
+      subtitle: "Voice mode active",
+      tooltip: "Voice Recording (Active)",
+      mobileLabel: "Voice",
+      mobileColor: "text-[#ffe082]",
+      mobileMedallionBg: "bg-[#ffe082] text-[#081326]",
+      icon: <Mic size={19} className="text-[#081326]" strokeWidth={2.6} />,
+      mobileIcon: <Mic size={24} strokeWidth={2.6} />,
+    };
+  }, [isNewDreamPage, captureState]);
+
   const isTabActive = (href: string) => {
     if (href === "/journal") {
       return (
@@ -634,32 +804,24 @@ export function MobileTabBar() {
           );
         })}
 
-        {/* Raised Center Cartoon Medallion: Voice Record Dream */}
+        {/* Raised Center Cartoon Medallion */}
         <div className="flex flex-col items-center justify-end">
           <Link
             href="/journal/new"
-            aria-label="Record a new dream"
+            aria-label={actionButton.title}
             aria-current={isNewDreamPage ? "page" : undefined}
             className="group flex flex-col items-center gap-1 focus-visible:outline-none"
           >
             <span
-              className={`-mt-7 flex h-13 w-13 items-center justify-center rounded-2xl border-[2.5px] border-[#081326] shadow-[0_4px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.45)] active:translate-y-1 active:shadow-[0_1px_0_0_#081326] transition-all ${
-                isNewDreamPage
-                  ? "bg-[#ffe082] text-[#081326]"
-                  : "bg-[#5bb8ff] text-[#081326]"
-              }`}
+              className={`-mt-7 flex h-13 w-13 items-center justify-center rounded-2xl border-[2.5px] border-[#081326] shadow-[0_4px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.45)] active:translate-y-1 active:shadow-[0_1px_0_0_#081326] transition-all ${actionButton.mobileMedallionBg}`}
               style={{ width: "52px", height: "52px" }}
             >
-              <Mic size={24} strokeWidth={2.6} />
+              {actionButton.mobileIcon}
             </span>
             <span
-              className={`pb-1 text-[11px] leading-none ${
-                isNewDreamPage
-                  ? "font-extrabold text-[#ffe082]"
-                  : "font-extrabold text-[#7ac8ff]"
-              }`}
+              className={`pb-1 text-[11px] font-extrabold leading-none ${actionButton.mobileColor}`}
             >
-              Record
+              {actionButton.mobileLabel}
             </span>
           </Link>
         </div>

@@ -34,6 +34,7 @@ import {
 import { VoiceRecorderButton } from "@/components/VoiceRecorder";
 import { CartoonDatePicker } from "@/components/CartoonDatePicker";
 import { CartoonDreamTypeSelect } from "@/components/CartoonDreamTypeSelect";
+import { emitCaptureState } from "@/lib/captureState";
 
 const MOOD_OPTIONS: Mood[] = [
   "peaceful",
@@ -120,6 +121,10 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
   function update<K extends keyof DreamFormData>(key: K, value: DreamFormData[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
+
+  useEffect(() => {
+    emitCaptureState({ mode: inputMode, isListening: false });
+  }, [inputMode]);
 
   useEffect(() => {
     if (mode !== "new" || initializedFromSettingsRef.current) return;

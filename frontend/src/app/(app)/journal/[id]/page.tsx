@@ -11,6 +11,7 @@ import { dreamsApi, profileApi } from "@/lib/api";
 import type { DateFormat, Dream } from "@/types";
 import { DreamForm } from "@/components/DreamForm";
 import { DREAM_TYPE_LABELS, DREAM_TYPE_ICONS, MOOD_LABELS, formatDate } from "@/lib/utils";
+import DreamLoader from "@/components/DreamLoader";
 import {
   CartoonCloud, CartoonSparkle, JournalStyles, JOURNAL_FONT, getMoodStickerStyle,
 } from "@/components/JournalTheme";
@@ -80,9 +81,7 @@ export default function DreamDetailPage() {
     return (
       <div className={PAGE_SHELL} style={{ fontFamily: JOURNAL_FONT }}>
         <JournalStyles />
-        <div className="jr-card h-40 w-full shrink-0 animate-pulse rounded-[28px] bg-[#162e59]" />
-        <div className="jr-card w-full flex-1 animate-pulse rounded-3xl bg-[#152c57]" />
-        <div className="jr-card h-24 w-full shrink-0 animate-pulse rounded-3xl bg-[#152c57]" />
+        <DreamLoader variant="full" message="Weaving dream threads…" />
       </div>
     );
   }

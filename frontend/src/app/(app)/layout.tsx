@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Sidebar, MobileTabBar, MobileHeader } from "@/components/Navigation";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase";
+import DreamLoader from "@/components/DreamLoader";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -57,12 +58,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (loading && isSupabaseConfigured) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="spinner" />
-          <p className="text-sm" style={{ color: "#7781ac" }}>
-            Loading journal...
-          </p>
-        </div>
+        <DreamLoader variant="full" message="Loading journal…" />
       </div>
     );
   }

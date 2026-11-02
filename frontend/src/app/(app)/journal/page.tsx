@@ -15,6 +15,7 @@ import {
 import {
   CartoonCloud, CartoonSparkle, JournalStyles, JOURNAL_FONT, getMoodStickerStyle,
 } from "@/components/JournalTheme";
+import DreamLoader from "@/components/DreamLoader";
 
 function DreamSkeleton() {
   return (
@@ -325,9 +326,7 @@ export default function JournalPage() {
       {/* Results fill remaining space */}
       <div className="flex min-h-0 w-full flex-1 flex-col">
         {loading && dreams.length === 0 ? (
-          <div className="grid w-full gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {[...Array(6)].map((_, i) => <DreamSkeleton key={i} />)}
-          </div>
+          <DreamLoader variant="section" message="Gathering your dreams…" />
         ) : dreams.length === 0 ? (
           <section className="jr-card relative flex w-full flex-1 items-center justify-center overflow-hidden rounded-3xl bg-[#162e59] p-10 text-center">
             <CartoonCloud fill="#20427d" className="pointer-events-none absolute -bottom-8 -left-10 w-52 opacity-60" />

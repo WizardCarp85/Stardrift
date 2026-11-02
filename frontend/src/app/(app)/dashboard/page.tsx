@@ -28,6 +28,7 @@ import { dashboardApi, profileApi } from "@/lib/api";
 import { getSupabaseClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import type { DashboardSummary, DateFormat } from "@/types";
+import DreamLoader from "@/components/DreamLoader";
 import {
   DREAM_TYPE_LABELS,
   DREAM_TYPE_ICONS,
@@ -379,38 +380,7 @@ export default function DashboardPage() {
     return (
       <div className={PAGE_SHELL} style={{ fontFamily: "'Quicksand', ui-rounded, 'Nunito', sans-serif" }}>
         {sharedStyles}
-
-        {/* Hero Skeleton */}
-        <div className="dash-cartoon-card w-full shrink-0 animate-pulse rounded-[28px] bg-[#162e59] p-6 sm:p-8">
-          <div className="mb-4 h-6 w-36 rounded-full bg-white/10" />
-          <div className="mb-3 h-9 w-72 max-w-full rounded-xl bg-white/15" />
-          <div className="mb-6 h-4 w-96 max-w-full rounded-lg bg-white/10" />
-          <div className="flex gap-3">
-            <div className="h-11 w-40 rounded-2xl bg-[#5bb8ff]/40" />
-            <div className="h-11 w-32 rounded-2xl bg-white/10" />
-          </div>
-        </div>
-
-        {/* Stat Bento Skeleton */}
-        <div className="grid w-full shrink-0 grid-cols-2 gap-4 xl:grid-cols-4">
-          {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="dash-cartoon-card h-40 animate-pulse rounded-3xl bg-[#152c57] p-5">
-              <div className="mb-4 h-11 w-11 rounded-2xl bg-white/10" />
-              <div className="mb-2 h-8 w-20 rounded-lg bg-white/15" />
-              <div className="h-3.5 w-28 rounded bg-white/10" />
-            </div>
-          ))}
-        </div>
-
-        {/* Chart Skeleton — flexes to fill */}
-        <div className="dash-cartoon-card w-full min-h-56 flex-1 animate-pulse rounded-3xl bg-[#152c57]" />
-
-        {/* Bottom strip skeleton — pinned */}
-        <div className="grid w-full shrink-0 gap-4 sm:grid-cols-3">
-          {[0, 1, 2].map((i) => (
-            <div key={i} className="dash-cartoon-card h-20 animate-pulse rounded-2xl bg-[#162f5c]" />
-          ))}
-        </div>
+        <DreamLoader variant="full" message="Opening your nightbook…" />
       </div>
     );
   }

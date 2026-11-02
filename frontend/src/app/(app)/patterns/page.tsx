@@ -53,6 +53,7 @@ import {
 } from "recharts";
 import { patternsApi, profileApi } from "@/lib/api";
 import type { PatternsOverview } from "@/types";
+import DreamLoader from "@/components/DreamLoader";
 import { DREAM_TYPE_LABELS, MOOD_LABELS } from "@/lib/utils";
 
 const TYPE_COLORS: Record<string, string> = {
@@ -344,31 +345,7 @@ function LoadingPage() {
       style={{ fontFamily: "'Quicksand', ui-rounded, 'Nunito', sans-serif" }}
     >
       <PatternsStyles />
-
-      <div className="pattern-card w-full shrink-0 animate-pulse rounded-[30px] bg-[#162e59] p-7">
-        <div className="mb-5 h-6 w-40 rounded-full bg-white/10" />
-        <div className="mb-3 h-10 w-80 max-w-full rounded-xl bg-white/15" />
-        <div className="mb-7 h-4 w-96 max-w-full rounded bg-white/10" />
-        <div className="flex gap-3">
-          <div className="h-12 w-36 rounded-2xl bg-[#5bb8ff]/30" />
-          <div className="h-12 w-32 rounded-2xl bg-white/10" />
-        </div>
-      </div>
-
-      <div className="grid w-full shrink-0 grid-cols-2 gap-4 xl:grid-cols-4">
-        {[0, 1, 2, 3].map((item) => (
-          <div key={item} className="pattern-card h-40 animate-pulse rounded-3xl bg-[#152c57] p-5">
-            <div className="mb-6 h-11 w-11 rounded-2xl bg-white/10" />
-            <div className="mb-2 h-8 w-20 rounded-lg bg-white/15" />
-            <div className="h-3 w-28 rounded bg-white/10" />
-          </div>
-        ))}
-      </div>
-
-      <div className="grid w-full flex-1 gap-5 xl:grid-cols-2">
-        <div className="pattern-card h-full min-h-72 animate-pulse rounded-3xl bg-[#152c57]" />
-        <div className="pattern-card h-full min-h-72 animate-pulse rounded-3xl bg-[#152c57]" />
-      </div>
+      <DreamLoader variant="full" message="Tuning into the cosmos…" />
     </div>
   );
 }

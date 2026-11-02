@@ -28,6 +28,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { profileApi, dashboardApi } from "@/lib/api";
+import DreamLoader from "@/components/DreamLoader";
 import { getSupabaseClient } from "@/lib/supabase";
 import type { DashboardSummary, UserProfile } from "@/types";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -281,14 +282,7 @@ export default function ProfilePage() {
     return (
       <div className="flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-4" style={{ fontFamily: FONT }}>
         <Styles />
-        <div className="h-12 w-64 animate-pulse rounded-2xl bg-[#152c57]" />
-        <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(260px,320px)_minmax(0,1fr)]">
-          <div className="pcard h-full animate-pulse rounded-3xl bg-[#162e59]" />
-          <div className="flex h-full flex-col gap-4">
-            <div className="pcard flex-1 animate-pulse rounded-3xl bg-[#152c57]" />
-            <div className="pcard h-44 animate-pulse rounded-3xl bg-[#152c57]" />
-          </div>
-        </div>
+        <DreamLoader variant="full" message="Gathering stardust…" />
       </div>
     );
   }

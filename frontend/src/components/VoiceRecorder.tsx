@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Mic, Square, AlertTriangle, Sparkles } from "lucide-react";
+import { emitCaptureState } from "@/lib/captureState";
 
 type SpeechRecognitionResult = {
   readonly isFinal: boolean;
@@ -56,6 +57,10 @@ export function VoiceRecorderButton({ onTranscript, disabled, lang = "en-US" }: 
   const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
+
+  useEffect(() => {
+    emitCaptureState({ mode: "speak", isListening });
+  }, [isListening]);
 
   const startListening = useCallback(() => {
     setError(null);

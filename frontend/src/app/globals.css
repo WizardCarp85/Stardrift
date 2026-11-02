@@ -614,15 +614,15 @@ input[type="date"] {
 }
 
 /* ============================================================
-   Loading spinner
+   Loading spinner (themed)
    ============================================================ */
 .spinner {
   width: 24px;
   height: 24px;
-  border: 2px solid rgba(108, 142, 255, 0.2);
-  border-top-color: #6c8eff;
+  border: 2.5px solid rgba(91, 184, 255, 0.2);
+  border-top-color: #5bb8ff;
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  animation: spin 0.65s linear infinite;
 }
 
 @keyframes spin {
