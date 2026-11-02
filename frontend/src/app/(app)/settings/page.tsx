@@ -185,40 +185,62 @@ function SettingsStyles() {
       .settings-button {
         display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
         border: 2.5px solid #081326; border-radius: .9rem; font-weight: 800;
-        transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+        transition: transform .18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .18s ease, background-color .18s ease;
       }
-      .settings-button:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 0 #081326; }
       .settings-button:disabled { cursor: not-allowed; opacity: .6; }
       .settings-button-sky { color: #081326; background: #5bb8ff; box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.45); }
-      .settings-button-sky:hover:not(:disabled) { background: #77c6ff; transform: translateY(-2px); box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.55); }
+      .settings-button-sky:hover:not(:disabled) { background: #77c6ff; transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(91,184,255,.35), inset 0 2px 0 0 rgba(255,255,255,.55); }
       .settings-button-navy { color: #eef6ff; background: #1c396e; box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.12); }
-      .settings-button-navy:hover:not(:disabled) { background: #254887; transform: translateY(-2px); box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.18); }
+      .settings-button-navy:hover:not(:disabled) { background: #254887; transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.18); }
       .settings-button-gold { color: #081326; background: #ffe082; box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.45); }
-      .settings-button-gold:hover:not(:disabled) { background: #ffeb9b; transform: translateY(-2px); box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.55); }
+      .settings-button-gold:hover:not(:disabled) { background: #ffeb9b; transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(255,224,130,.35), inset 0 2px 0 0 rgba(255,255,255,.55); }
       .settings-button-danger { color: #081326; background: #ff859d; box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.4); }
-      .settings-button-danger:hover:not(:disabled) { background: #ff9cb3; transform: translateY(-2px); box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.5); }
+      .settings-button-danger:hover:not(:disabled) { background: #ff9cb3; transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(255,133,157,.35), inset 0 2px 0 0 rgba(255,255,255,.5); }
+      
+      /* Tactile cartoon click compression for all button variants */
+      .settings-button:active:not(:disabled),
+      .settings-button-sky:active:not(:disabled),
+      .settings-button-navy:active:not(:disabled),
+      .settings-button-gold:active:not(:disabled),
+      .settings-button-danger:active:not(:disabled) {
+        transform: translateY(2px) scale(0.97) !important;
+        box-shadow: 0 1px 0 0 #081326 !important;
+      }
+
       .settings-field {
         width: 100%; min-height: 44px; border: 2.5px solid #081326; border-radius: .8rem;
         background: #0d1f3f; color: #eef6ff; font-size: .875rem; font-weight: 700;
-        padding: .65rem .8rem; outline: none; transition: border-color .15s ease, box-shadow .15s ease;
+        padding: .65rem .8rem; outline: none; transition: border-color .15s ease, box-shadow .2s ease;
       }
-      .settings-field:focus { border-color: #5bb8ff; box-shadow: 0 0 0 3px rgba(91,184,255,.2); }
+      .settings-field:focus { border-color: #5bb8ff; box-shadow: 0 0 0 3px rgba(91,184,255,.24), 0 0 16px rgba(91,184,255,.12); }
       .settings-field::placeholder { color: #6d8eb8; }
-      .settings-nav-button { transition: background-color .15s ease, transform .15s ease; }
-      .settings-nav-button:hover { background: #1c396e; transform: translateX(2px); }
+      .settings-nav-button {
+        position: relative;
+        transition: background-color .18s ease, transform .15s ease, box-shadow .18s ease;
+      }
+      .settings-nav-button:hover { background: #18335f; }
+      .settings-nav-button:active { transform: translateY(1px) scale(0.98); }
       .settings-scroll { scrollbar-width: thin; scrollbar-color: #2a4a7d transparent; }
       .settings-scroll::-webkit-scrollbar { width: 8px; }
       .settings-scroll::-webkit-scrollbar-thumb { background: #2a4a7d; border-radius: 999px; }
-      @keyframes panelIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-      .settings-panel-enter { animation: panelIn .2s ease-out; }
+      @keyframes panelIn {
+        0% { opacity: 0; transform: translateY(10px) scale(0.988); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      .settings-panel-enter { animation: panelIn .26s cubic-bezier(0.34, 1.35, 0.64, 1); }
       @keyframes toastPop {
         0% { opacity: 0; transform: translateY(-12px) scale(0.95); }
         60% { transform: translateY(2px) scale(1.02); }
         100% { opacity: 1; transform: translateY(0) scale(1); }
       }
       .settings-toast-enter { animation: toastPop .25s cubic-bezier(0.34, 1.35, 0.64, 1); }
+      @keyframes modalFade {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .settings-modal-backdrop { animation: modalFade .2s ease-out both; }
       @media (prefers-reduced-motion: reduce) {
-        .settings-button, .settings-nav-button, .settings-panel-enter, .settings-toast-enter { animation: none !important; transition: none !important; }
+        .settings-button, .settings-nav-button, .settings-panel-enter, .settings-toast-enter, .settings-modal-backdrop { animation: none !important; transition: none !important; }
       }
     `}</style>
   );
@@ -259,18 +281,22 @@ function CartoonSelect<T extends string | number>({
         type="button"
         disabled={disabled}
         onClick={() => setOpen((o) => !o)}
-        className="settings-field flex w-full items-center justify-between gap-2 text-left disabled:cursor-not-allowed disabled:opacity-50"
+        className={`settings-field flex w-full items-center justify-between gap-2 text-left transition-all duration-150 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${
+          open ? "border-[#5bb8ff] shadow-[0_0_0_3px_rgba(91,184,255,0.24)]" : ""
+        }`}
       >
         <span className="truncate">{selected?.label ?? "Select…"}</span>
         <ChevronDown
           size={16}
           strokeWidth={2.6}
-          className={`shrink-0 text-[#6bc2ff] transition-transform ${open ? "rotate-180" : ""}`}
+          className={`shrink-0 text-[#6bc2ff] transition-transform duration-250 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+            open ? "rotate-180 text-white" : ""
+          }`}
         />
       </button>
 
       {open && (
-        <div className="absolute z-30 mt-1.5 max-h-56 w-full overflow-y-auto rounded-xl border-[2.5px] border-[#081326] bg-[#0d1f3f] py-1 shadow-[0_4px_0_0_#081326]">
+        <div className="animate-pop-in origin-top absolute left-0 top-full z-50 mt-1.5 max-h-56 w-full overflow-y-auto settings-scroll rounded-xl border-[2.5px] border-[#081326] bg-[#0d1f3f] py-1 shadow-[0_8px_24px_rgba(0,0,0,0.6),0_4px_0_0_#081326]">
           {options.map((opt) => {
             const active = opt.value === value;
             return (
@@ -281,12 +307,20 @@ function CartoonSelect<T extends string | number>({
                   onChange(opt.value);
                   setOpen(false);
                 }}
-                className={`flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-xs font-extrabold ${
-                  active ? "bg-[#1d3b70] text-white" : "text-[#cfe3fc] hover:bg-[#173260]"
+                className={`group flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-xs font-extrabold transition-colors duration-150 ${
+                  active
+                    ? "bg-[#1d3b70] text-white"
+                    : "text-[#cfe3fc] hover:bg-[#173260] hover:text-white"
                 }`}
               >
-                <span className="truncate">{opt.label}</span>
-                {active && <Check size={13} strokeWidth={3} className="shrink-0 text-[#64dfd0]" />}
+                <span className="truncate transition-transform duration-150 group-hover:translate-x-1">{opt.label}</span>
+                {active && (
+                  <Check
+                    size={13}
+                    strokeWidth={3}
+                    className="shrink-0 text-[#64dfd0] transition-transform duration-200 group-hover:scale-125"
+                  />
+                )}
               </button>
             );
           })}
@@ -352,12 +386,19 @@ function Toggle({
       aria-checked={checked}
       disabled={disabled}
       onClick={() => onChange(!checked)}
-      className="relative h-7 w-12 shrink-0 rounded-full border-2 border-[#081326] shadow-[0_2px_0_0_#081326] transition-colors disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffe082]"
-      style={{ backgroundColor: checked ? accent : "#2a4267" }}
+      className="group relative h-7 w-12 shrink-0 rounded-full border-2 border-[#081326] shadow-[0_2px_0_0_#081326] transition-colors duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffe082]"
+      style={{
+        backgroundColor: checked ? accent : "#2a4267",
+        boxShadow: checked
+          ? `0 2px 0 0 #081326, 0 0 12px ${accent}45`
+          : "0 2px 0 0 #081326",
+      }}
     >
       <span
-        className="absolute left-[3px] top-[3px] h-[17px] w-[17px] rounded-full border-2 border-[#081326] bg-white transition-transform"
-        style={{ transform: checked ? "translateX(19px)" : "translateX(0)" }}
+        className="absolute left-[3px] top-[3px] h-[17px] w-[17px] rounded-full border-2 border-[#081326] bg-white shadow-sm transition-transform duration-200 ease-out"
+        style={{
+          transform: checked ? "translateX(20px)" : "translateX(0)",
+        }}
       />
     </button>
   );
@@ -542,7 +583,7 @@ function FeedbackToast({
         <button
           type="button"
           onClick={onDismiss}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-[#081326] bg-[#0c1b36]/70 text-[#8fb2de] hover:bg-[#1a3769] hover:text-white"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-[#081326] bg-[#0c1b36]/70 text-[#8fb2de] transition-all duration-150 hover:bg-[#1a3769] hover:text-white hover:rotate-90 hover:scale-105 active:scale-90"
           aria-label="Dismiss message"
         >
           <X size={14} strokeWidth={2.6} />
@@ -564,7 +605,7 @@ function ChoiceButtons<T extends string>({
   activeColor: string;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="inline-flex rounded-2xl border-2 border-[#081326] bg-[#0b1b36] p-1 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] select-none">
       {options.map((option) => {
         const active = value === option.value;
         return (
@@ -572,10 +613,14 @@ function ChoiceButtons<T extends string>({
             key={option.value}
             type="button"
             onClick={() => onChange(option.value)}
-            className={`rounded-xl border-2 border-[#081326] px-3 py-2.5 text-xs font-extrabold ${
-              active ? "text-[#081326] shadow-[0_2px_0_0_#081326]" : "bg-[#0d1f3f] text-[#9bc0ed]"
+            className={`flex-1 rounded-xl px-3 py-2 text-xs font-extrabold transition-all duration-200 ${
+              active
+                ? "border-2 border-[#081326] text-[#081326] shadow-[0_2px_0_0_#081326]"
+                : "border-2 border-transparent text-[#8cb3e2] hover:text-white hover:bg-white/5"
             }`}
-            style={active ? { backgroundColor: activeColor } : undefined}
+            style={{
+              backgroundColor: active ? activeColor : "transparent",
+            }}
           >
             {option.label}
           </button>
@@ -636,6 +681,7 @@ export default function SettingsPage() {
   const [notificationPermission, setNotificationPermission] = useState<PermissionState>("default");
   const [exporting, setExporting] = useState<"json" | "csv" | "markdown" | null>(null);
   const [signingOut, setSigningOut] = useState(false);
+  const [signOutOpen, setSignOutOpen] = useState(false);
 
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deletePhrase, setDeletePhrase] = useState("");
@@ -996,12 +1042,12 @@ export default function SettingsPage() {
 
   return (
     <main
-      className="flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-4 text-[#eef6ff]"
+      className="fade-in-scale flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-4 text-[#eef6ff]"
       style={{ fontFamily: FONT }}
     >
       <SettingsStyles />
 
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3">
+      <header className="fade-in-scale stagger-1 flex shrink-0 flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#132952] shadow-[0_2px_0_0_#081326]">
             <Settings2 size={16} className="text-[#7ac8ff]" strokeWidth={2.5} />
@@ -1045,7 +1091,7 @@ export default function SettingsPage() {
       {feedback && <FeedbackToast feedback={feedback} onDismiss={() => setFeedback(null)} />}
 
       <div className="grid min-h-0 flex-1 items-stretch gap-4 lg:grid-cols-[minmax(220px,260px)_minmax(0,1fr)]">
-        <aside className="flex min-h-0 flex-col lg:rounded-[26px] lg:border-[2.5px] lg:border-[#081326] lg:bg-gradient-to-b lg:from-[#1a3769] lg:to-[#0f2245] lg:p-3 lg:shadow-[0_5px_0_0_#081326]">
+        <aside className="fade-in-scale stagger-2 flex min-h-0 flex-col lg:rounded-[26px] lg:border-[2.5px] lg:border-[#081326] lg:bg-gradient-to-b lg:from-[#1a3769] lg:to-[#0f2245] lg:p-3 lg:shadow-[0_5px_0_0_#081326]">
           <p className="mb-2 hidden px-2 pt-1 text-[10px] font-extrabold uppercase tracking-widest text-[#7ea4d4] lg:block">
             Categories
           </p>
@@ -1060,19 +1106,23 @@ export default function SettingsPage() {
                   type="button"
                   onClick={() => setActiveSection(item.id)}
                   aria-current={active ? "page" : undefined}
-                  className={`settings-nav-button flex min-w-max items-center gap-2.5 rounded-2xl border-2 border-[#081326] px-3 py-2.5 text-left lg:w-full ${
-                    active ? "bg-[#1d3b70] shadow-[0_3px_0_0_#081326]" : "bg-[#12264a]"
+                  className={`settings-nav-button group relative flex min-w-max items-center gap-2.5 rounded-2xl border-2 border-[#081326] px-3 py-2.5 text-left transition-all duration-200 active:scale-[0.98] lg:w-full ${
+                    active
+                      ? "bg-[#1d3b70] shadow-[0_3px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.12)]"
+                      : "bg-[#12264a] hover:bg-[#18335f] hover:shadow-[0_2px_0_0_#081326]"
                   }`}
                 >
                   <span
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border-2 border-[#081326]"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border-2 border-[#081326] shadow-[0_2px_0_0_#081326] transition-transform duration-200 group-hover:scale-105 group-active:scale-95"
                     style={{ backgroundColor: item.accent }}
                   >
                     <Icon size={15} className="text-[#081326]" strokeWidth={2.5} />
                   </span>
-                  <span className="min-w-0">
-                    <span className="block text-xs font-extrabold text-white">{item.label}</span>
-                    <span className="mt-0.5 block text-[10px] font-semibold text-[#91b0d8]">{item.description}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className={`block text-xs font-extrabold ${active ? "text-white" : "text-[#d8e9ff]"}`}>
+                      {item.label}
+                    </span>
+                    <span className="mt-0.5 block text-[10px] font-semibold text-[#8eb0da]">{item.description}</span>
                   </span>
                 </button>
               );
@@ -1093,7 +1143,7 @@ export default function SettingsPage() {
 
         <section
           key={activeSection}
-          className="settings-card settings-panel-enter flex min-h-0 flex-col overflow-hidden rounded-[26px] bg-[#152d58]"
+          className="settings-card settings-panel-enter fade-in-scale stagger-3 flex min-h-0 flex-col overflow-hidden rounded-[26px] bg-[#152d58]"
         >
           <PanelHeader
             icon={activeNav.icon}
@@ -1398,11 +1448,18 @@ export default function SettingsPage() {
                     />
                     <button
                       type="button"
-                      onClick={() =>
-                        updateSetting("timezone", Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC")
-                      }
-                      className="settings-button settings-button-navy shrink-0 px-3 text-xs"
+                      onClick={() => {
+                        const detected = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+                        updateSetting("timezone", detected);
+                        setFeedback({
+                          type: "success",
+                          message: `Detected timezone: ${detected.replaceAll("_", " ")}`,
+                        });
+                      }}
+                      className="settings-button settings-button-navy shrink-0 px-3 text-xs transition-all duration-150"
+                      title="Auto-detect timezone from device"
                     >
+                      <Sparkles size={12} strokeWidth={2.5} className="text-[#ffe082]" />
                       Detect
                     </button>
                   </div>
@@ -1576,12 +1633,12 @@ export default function SettingsPage() {
                 >
                   <button
                     type="button"
-                    onClick={signOut}
+                    onClick={() => setSignOutOpen(true)}
                     disabled={signingOut}
                     className="settings-button settings-button-navy px-4 py-2.5 text-xs"
                   >
-                    {signingOut ? <Loader2 size={14} className="animate-spin" /> : <LogOut size={14} />}
-                    {signingOut ? "Signing out…" : "Sign out"}
+                    <LogOut size={14} />
+                    Sign out
                   </button>
                 </SettingRow>
 
@@ -1652,9 +1709,68 @@ export default function SettingsPage() {
         </div>
       )}
 
+      {signOutOpen && (
+        <div
+          className="settings-modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-[#050b18]/80 p-4 backdrop-blur-md"
+          role="presentation"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget && !signingOut) setSignOutOpen(false);
+          }}
+        >
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="signout-modal-title"
+            className="settings-card animate-pop-in w-full max-w-sm rounded-[26px] bg-[#182a4b] p-6 shadow-[0_12px_36px_rgba(0,0,0,0.6),0_6px_0_0_#081326]"
+          >
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#081326] bg-[#ff859d] text-[#081326] shadow-[0_3px_0_0_#081326]">
+                <LogOut size={22} strokeWidth={2.6} />
+              </span>
+              <button
+                type="button"
+                onClick={() => !signingOut && setSignOutOpen(false)}
+                disabled={signingOut}
+                className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#102244] text-[#cfe3fc] transition-all duration-200 hover:bg-[#1c396e] hover:rotate-90 hover:scale-105 active:scale-95"
+                aria-label="Cancel sign out"
+              >
+                <X size={17} />
+              </button>
+            </div>
+
+            <h2 id="signout-modal-title" className="text-xl font-extrabold text-white">
+              Sign out of Stardrift?
+            </h2>
+            <p className="mt-2 text-xs font-semibold leading-relaxed text-[#b6cce9]">
+              Are you sure you want to end your session on this device? You can sign back in anytime.
+            </p>
+
+            <div className="mt-6 flex flex-col-reverse gap-2.5 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setSignOutOpen(false)}
+                disabled={signingOut}
+                className="settings-button settings-button-navy px-4 py-2.5 text-xs"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={signOut}
+                disabled={signingOut}
+                className="settings-button settings-button-danger px-4 py-2.5 text-xs"
+              >
+                {signingOut ? <Loader2 size={14} className="animate-spin" /> : <LogOut size={14} />}
+                {signingOut ? "Signing out…" : "Sign out"}
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
+
       {deleteOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#050b18]/80 p-4 backdrop-blur-sm"
+          className="settings-modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-[#050b18]/80 p-4 backdrop-blur-md"
           role="presentation"
           onMouseDown={(e) => {
             if (e.target === e.currentTarget && !deleting) closeDeleteModal();
@@ -1664,17 +1780,17 @@ export default function SettingsPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="delete-account-title"
-            className="settings-card w-full max-w-md rounded-[26px] bg-[#182a4b] p-6"
+            className="settings-card animate-pop-in w-full max-w-md rounded-[26px] bg-[#182a4b] p-6 shadow-[0_12px_36px_rgba(0,0,0,0.6),0_6px_0_0_#081326]"
           >
             <div className="mb-4 flex items-start justify-between gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#081326] bg-[#ff859d] text-[#081326] shadow-[0_3px_0_0_#081326]">
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#081326] bg-[#ff859d] text-[#081326] shadow-[0_3px_0_0_#081326] transition-transform duration-200 hover:scale-105 hover:-rotate-3">
                 <AlertTriangle size={23} strokeWidth={2.5} />
               </span>
               <button
                 type="button"
                 onClick={() => !deleting && closeDeleteModal()}
                 disabled={deleting}
-                className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#102244] text-[#cfe3fc] hover:bg-[#1c396e]"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#102244] text-[#cfe3fc] transition-all duration-200 hover:bg-[#1c396e] hover:rotate-90 hover:scale-105 active:scale-95"
                 aria-label="Close delete dialog"
               >
                 <X size={17} />

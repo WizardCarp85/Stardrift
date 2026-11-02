@@ -128,7 +128,14 @@ function CartoonSparkle({
   className?: string;
 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      className={`animate-twinkle hover:scale-125 transition-transform duration-300 ${className}`}
+      aria-hidden="true"
+    >
       <path
         d="M12 2C12.7 7.6 16.4 11.3 22 12C16.4 12.7 12.7 16.4 12 22C11.3 16.4 7.6 12.7 2 12C7.6 11.3 11.3 7.6 12 2Z"
         fill={color}
@@ -148,7 +155,13 @@ function CartoonCloud({
   className?: string;
 }) {
   return (
-    <svg viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+    <svg
+      viewBox="0 0 220 90"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`animate-float-slow transition-transform duration-500 ${className}`}
+      aria-hidden="true"
+    >
       <path
         d="M28 82H190C203.255 82 214 71.2548 214 58C214 45.792 204.88 35.7145 193.079 34.2016C189.261 18.0273 174.725 6 157.4 6C143.829 6 131.954 13.386 125.605 24.3374C119.994 19.7544 112.833 17 105 17C88.2355 17 74.4776 29.6691 72.6977 45.9597C68.8312 43.4557 64.2227 42 59.2727 42C45.315 42 34 53.315 34 67.2727C34 68.1986 34.0497 69.1128 34.1466 70.0131C23.5499 70.7222 15 74.5 15 78.5C15 80.9853 20.8203 82 28 82Z"
         fill={fill}
@@ -169,36 +182,38 @@ function PatternsStyles() {
         border: 2.5px solid #081326;
         box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.14);
       }
-      .pattern-lift { transition: transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s ease; }
+      .pattern-lift {
+        transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.2s ease;
+      }
       .pattern-lift:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
+        transform: translateY(-4px) scale(1.008);
+        box-shadow: 0 10px 0 0 #081326, 0 0 20px rgba(91, 184, 255, 0.15), inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
       }
       .pattern-btn-primary,
       .pattern-btn-secondary {
         display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
         border: 2.5px solid #081326; font-weight: 800;
-        transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+        transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease;
       }
       .pattern-btn-primary {
         background: #5bb8ff; color: #081326;
         box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.45);
       }
       .pattern-btn-primary:hover:not(:disabled) {
-        background: #77c6ff; transform: translateY(-2px);
-        box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.55);
+        background: #77c6ff; transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(91, 184, 255, 0.35), inset 0 2px 0 0 rgba(255,255,255,.55);
       }
       .pattern-btn-secondary {
         background: #162f5c; color: #eef6ff;
         box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.14);
       }
       .pattern-btn-secondary:hover:not(:disabled) {
-        background: #1f417d; transform: translateY(-2px);
+        background: #1f417d; transform: translateY(-2px) scale(1.02);
         box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.22);
       }
       .pattern-btn-primary:active:not(:disabled),
       .pattern-btn-secondary:active:not(:disabled) {
-        transform: translateY(2px); box-shadow: 0 1px 0 0 #081326;
+        transform: translateY(2px) scale(0.98); box-shadow: 0 1px 0 0 #081326;
       }
       .pattern-btn-primary:disabled,
       .pattern-btn-secondary:disabled { cursor: not-allowed; opacity: .6; }
@@ -298,7 +313,7 @@ function StatCard({
 }) {
   return (
     <div
-      className="pattern-card pattern-lift relative min-w-0 overflow-hidden rounded-3xl p-5"
+      className="pattern-card pattern-lift fade-in-scale relative min-w-0 overflow-hidden rounded-3xl p-5"
       style={{ backgroundColor: surface }}
     >
       <Icon
@@ -512,13 +527,13 @@ export default function PatternsPage() {
 
   return (
     <div
-      className="flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-5 text-[#eef6ff]"
+      className="fade-in-scale flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-5 text-[#eef6ff]"
       style={{ fontFamily: "'Quicksand', ui-rounded, 'Nunito', sans-serif" }}
     >
       <PatternsStyles />
 
       {/* ── Observatory hero ─────────────────────────────────────────── */}
-      <section className="pattern-card relative w-full shrink-0 overflow-hidden rounded-[30px] bg-gradient-to-br from-[#1d407a] via-[#162f5e] to-[#0e2040] p-6 sm:p-8">
+      <section className="pattern-card fade-in-scale stagger-1 relative w-full shrink-0 overflow-hidden rounded-[30px] bg-gradient-to-br from-[#1d407a] via-[#162f5e] to-[#0e2040] p-6 sm:p-8">
         <div
           className="pointer-events-none absolute -right-20 -top-24 h-80 w-80 rounded-full blur-[70px]"
           style={{ background: "radial-gradient(circle, rgba(91,184,255,0.32) 0%, transparent 70%)" }}
@@ -738,7 +753,7 @@ export default function PatternsPage() {
           }`}
         >
           {/* All-time bento statistics */}
-          <section className="w-full shrink-0">
+          <section className="fade-in-scale stagger-2 w-full shrink-0">
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-extrabold text-white">Nightbook at a glance</h2>
@@ -758,7 +773,7 @@ export default function PatternsPage() {
           </section>
 
           {/* AI narrative spotlight */}
-          <section className="pattern-card relative w-full shrink-0 overflow-hidden rounded-3xl bg-gradient-to-br from-[#203d78] via-[#192f63] to-[#1c285c] p-6 sm:p-7">
+          <section className="pattern-card fade-in-scale stagger-3 relative w-full shrink-0 overflow-hidden rounded-3xl bg-gradient-to-br from-[#203d78] via-[#192f63] to-[#1c285c] p-6 sm:p-7">
             <div
               className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full blur-3xl"
               style={{ background: "radial-gradient(circle, rgba(148,173,255,0.25), transparent 70%)" }}
@@ -821,7 +836,7 @@ export default function PatternsPage() {
           </section>
 
           {/* Chart grid — three charts: 2-up, then full-width timeline */}
-          <div className="grid w-full gap-5 xl:grid-cols-2">
+          <div className="fade-in-scale stagger-4 grid w-full gap-5 xl:grid-cols-2">
             {/* Dream type donut */}
             <SectionCard
               title="Dream styles in orbit"
@@ -952,6 +967,7 @@ export default function PatternsPage() {
             subtitle="How emotional tones rise, settle, and return"
             icon={Activity}
             accent="#5bb8ff"
+            className="fade-in-scale stagger-5"
             action={
               moodAnalysis.dominantMoods.length > 0 ? (
                 <div className="flex flex-wrap justify-end gap-1.5">

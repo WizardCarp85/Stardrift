@@ -79,7 +79,7 @@ function CartoonCloud({ className = "", fill = "#214685" }: { className?: string
 
 function CartoonStar({ size = 14, color = "#ffe082", className = "" }: { size?: number; color?: string; className?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={`animate-twinkle hover:scale-125 transition-transform duration-300 ${className}`} aria-hidden="true">
       <path d="M12 2C12.7 7.6 16.4 11.3 22 12C16.4 12.7 12.7 16.4 12 22C11.3 16.4 7.6 12.7 2 12C7.6 11.3 11.3 7.6 12 2Z"
         fill={color} stroke="#081326" strokeWidth="2" strokeLinejoin="round" />
     </svg>
@@ -92,50 +92,52 @@ function Styles() {
       .pcard {
         border: 2.5px solid #081326;
         box-shadow: 0 5px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,0.12);
+        transition: transform .22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .22s ease;
       }
       .pbtn {
         display: inline-flex; align-items: center; justify-content: center;
         gap: .5rem; border: 2.5px solid #081326; border-radius: 1rem; font-weight: 800;
-        transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+        transition: transform .18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .18s ease, background .18s ease;
       }
-      .pbtn:active:not(:disabled){ transform: translateY(2px); box-shadow: 0 1px 0 0 #081326; }
+      .pbtn:active:not(:disabled){ transform: translateY(2px) scale(0.98); box-shadow: 0 1px 0 0 #081326; }
       .pbtn:disabled{ cursor: not-allowed; opacity:.6; }
       .pbtn-sky {
         background: #5bb8ff; color: #081326;
         box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.45);
       }
       .pbtn-sky:hover:not(:disabled){
-        background: #77c6ff; transform: translateY(-2px);
-        box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.55);
+        background: #77c6ff; transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(91,184,255,.35), inset 0 2px 0 0 rgba(255,255,255,.55);
       }
       .pbtn-navy {
         background: #1c396e; color: #eef6ff;
         box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.13);
       }
       .pbtn-navy:hover:not(:disabled){
-        background: #254887; transform: translateY(-2px);
+        background: #254887; transform: translateY(-2px) scale(1.02);
         box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255,255,255,.2);
       }
       .pinput {
         width: 100%; border: 2.5px solid #081326; border-radius: .9rem;
         background: #0c1c38; color: #eef6ff; font-weight: 700;
         padding: .7rem 1rem; outline: none;
-        transition: border-color .15s ease, box-shadow .15s ease;
+        transition: border-color .15s ease, box-shadow .2s ease;
       }
       .pinput:focus { border-color: #5bb8ff; box-shadow: 0 0 0 3px rgba(91,184,255,.22); }
       .pinput::placeholder { color: #5a7aaa; }
       .pchoice {
         cursor: pointer;
-        transition: transform .14s ease, background .14s ease, border-color .14s ease;
+        transition: transform .18s cubic-bezier(0.34, 1.56, 0.64, 1), background .15s ease, border-color .15s ease, box-shadow .15s ease;
       }
-      .pchoice:hover { transform: translateY(-2px); }
+      .pchoice:hover { transform: translateY(-2px) scale(1.02); }
+      .pchoice:active { transform: translateY(1px) scale(0.98); }
       @keyframes ptwinkle {
         0%,100%{ opacity:.4; transform: scale(.85); }
         50%{ opacity:1; transform: scale(1.15); }
       }
       .ptwinkle { animation: ptwinkle 3s ease-in-out infinite; }
       @media(prefers-reduced-motion:reduce){
-        .pbtn,.pchoice,.ptwinkle{ transition:none!important; animation:none!important; }
+        .pcard,.pbtn,.pchoice,.ptwinkle{ transition:none!important; animation:none!important; }
       }
     `}</style>
   );
@@ -289,12 +291,12 @@ export default function ProfilePage() {
 
   return (
     <div
-      className="flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-4 text-[#eef6ff]"
+      className="fade-in-scale flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-4 text-[#eef6ff]"
       style={{ fontFamily: FONT }}
     >
       <Styles />
 
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3">
+      <header className="fade-in-scale stagger-1 flex shrink-0 flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#132952] shadow-[0_2px_0_0_#081326]">
             <UserRound size={16} className="text-[#7ac8ff]" strokeWidth={2.5} />
@@ -316,7 +318,7 @@ export default function ProfilePage() {
 
       <div className="grid min-h-0 flex-1 items-stretch gap-4 lg:grid-cols-[minmax(260px,320px)_minmax(0,1fr)]">
         {/* LEFT — identity, stretches with the right column */}
-        <aside className="flex min-h-0">
+        <aside className="fade-in-scale stagger-2 flex min-h-0">
           <section className="pcard relative flex w-full flex-col overflow-hidden rounded-[26px] bg-gradient-to-b from-[#1d3f78] via-[#162f5e] to-[#0e2040] p-5 text-center sm:p-6">
             <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[#5bb8ff]/15 blur-2xl" aria-hidden="true" />
             <CartoonCloud fill="#1f4280" className="pointer-events-none absolute -bottom-8 -left-8 w-36 opacity-70" />
@@ -411,7 +413,7 @@ export default function ProfilePage() {
         </aside>
 
         {/* RIGHT — fills remaining width and height */}
-        <div className="flex min-h-0 min-w-0 flex-col gap-4">
+        <div className="fade-in-scale stagger-3 flex min-h-0 min-w-0 flex-col gap-4">
           {saveOk && (
             <div className="flex shrink-0 items-center gap-2.5 rounded-2xl border-2 border-[#081326] bg-[#64dfd0]/15 px-4 py-3 text-sm font-extrabold text-[#64dfd0]">
               <Check size={16} strokeWidth={3} /> Your profile was updated.

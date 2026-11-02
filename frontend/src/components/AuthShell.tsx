@@ -127,7 +127,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
         .auth-cartoon-input:focus {
           border-color: #5bb8ff;
           background: #102347;
-          box-shadow: 0 0 0 3px rgba(91, 184, 255, 0.22);
+          box-shadow: 0 0 0 3px rgba(91, 184, 255, 0.25), 0 0 16px rgba(91, 184, 255, 0.14);
         }
 
         .auth-cartoon-primary {
@@ -137,19 +137,20 @@ export function AuthShell({ children }: { children: ReactNode }) {
           box-shadow:
             0 4px 0 0 #081326,
             inset 0 2px 0 0 rgba(255, 255, 255, 0.45);
-          transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+          transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background 0.18s ease;
         }
 
         .auth-cartoon-primary:hover:not(:disabled) {
-          transform: translateY(-2px);
+          transform: translateY(-2px) scale(1.02);
           background: #77c6ff;
           box-shadow:
             0 6px 0 0 #081326,
+            0 0 16px rgba(91, 184, 255, 0.35),
             inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
         }
 
         .auth-cartoon-primary:active:not(:disabled) {
-          transform: translateY(2px);
+          transform: translateY(2px) scale(0.98);
           box-shadow: 0 1px 0 0 #081326;
         }
 

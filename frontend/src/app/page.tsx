@@ -100,7 +100,7 @@ function CartoonCloud({
       viewBox="0 0 220 90"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className={`animate-float-slow transition-transform duration-500 ${className}`}
       aria-hidden="true"
     >
       <path
@@ -123,7 +123,7 @@ function CartoonCloud({
 }
 
 /** Illustrated 4-Point Cartoon Star SVG */
-function CartoonSparkle({ size = 14, color = "#8fd0ff" }: { size?: number; color?: string }) {
+function CartoonSparkle({ size = 14, color = "#8fd0ff", className = "" }: { size?: number; color?: string; className?: string }) {
   return (
     <svg
       width={size}
@@ -131,6 +131,7 @@ function CartoonSparkle({ size = 14, color = "#8fd0ff" }: { size?: number; color
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={`animate-twinkle hover:scale-125 transition-transform duration-300 ${className}`}
       aria-hidden="true"
     >
       <path
@@ -198,26 +199,26 @@ export default function LandingPage() {
           box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.14);
         }
         .cartoon-card-lift {
-          transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+          transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
         }
         .cartoon-card-lift:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 10px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
+          transform: translateY(-4px) scale(1.008);
+          box-shadow: 0 10px 0 0 #081326, 0 0 20px rgba(91, 184, 255, 0.15), inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
         }
         .cartoon-btn-primary {
           background-color: #5bb8ff;
           color: #081326;
           border: 2.5px solid #081326;
           box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.45);
-          transition: all 0.15s ease;
+          transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease;
         }
         .cartoon-btn-primary:hover {
           background-color: #77c6ff;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(91, 184, 255, 0.35), inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
         }
         .cartoon-btn-primary:active {
-          transform: translateY(2px);
+          transform: translateY(2px) scale(0.98);
           box-shadow: 0 1px 0 0 #081326;
         }
         .cartoon-btn-secondary {
@@ -225,15 +226,15 @@ export default function LandingPage() {
           color: #eef6ff;
           border: 2.5px solid #081326;
           box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.14);
-          transition: all 0.15s ease;
+          transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease;
         }
         .cartoon-btn-secondary:hover {
           background-color: #254887;
-          transform: translateY(-2px);
+          transform: translateY(-2px) scale(1.02);
           box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.2);
         }
         .cartoon-btn-secondary:active {
-          transform: translateY(2px);
+          transform: translateY(2px) scale(0.98);
           box-shadow: 0 1px 0 0 #081326;
         }
       `}</style>

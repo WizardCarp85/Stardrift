@@ -55,7 +55,14 @@ function CartoonSparkle({
   className?: string;
 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      className={`animate-twinkle hover:scale-125 transition-transform duration-300 ${className}`}
+      aria-hidden="true"
+    >
       <path
         d="M12 2C12.7 7.6 16.4 11.3 22 12C16.4 12.7 12.7 16.4 12 22C11.3 16.4 7.6 12.7 2 12C7.6 11.3 11.3 7.6 12 2Z"
         fill={color}
@@ -76,7 +83,13 @@ function CartoonCloud({
   className?: string;
 }) {
   return (
-    <svg viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+    <svg
+      viewBox="0 0 220 90"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`animate-float-slow transition-transform duration-500 ${className}`}
+      aria-hidden="true"
+    >
       <path
         d="M28 82H190C203.255 82 214 71.2548 214 58C214 45.792 204.88 35.7145 193.079 34.2016C189.261 18.0273 174.725 6 157.4 6C143.829 6 131.954 13.386 125.605 24.3374C119.994 19.7544 112.833 17 105 17C88.2355 17 74.4776 29.6691 72.6977 45.9597C68.8312 43.4557 64.2227 42 59.2727 42C45.315 42 34 53.315 34 67.2727C34 68.1986 34.0497 69.1128 34.1466 70.0131C23.5499 70.7222 15 74.5 15 78.5C15 80.9853 20.8203 82 28 82Z"
         fill={fill}
@@ -119,6 +132,7 @@ function StatBentoCard({
   badgeBg,
   cardBg,
   footer,
+  staggerClass = "",
 }: {
   icon: React.ElementType;
   label: string;
@@ -127,21 +141,25 @@ function StatBentoCard({
   badgeBg: string;
   cardBg: string;
   footer?: React.ReactNode;
+  staggerClass?: string;
 }) {
+  const isFlame = label === "Streak";
   return (
     <div
-      className="dash-cartoon-card dash-cartoon-lift relative flex h-full min-w-0 flex-col justify-between gap-3 overflow-hidden rounded-3xl p-5"
+      className={`dash-cartoon-card dash-cartoon-lift group relative flex h-full min-w-0 flex-col justify-between gap-3 overflow-hidden rounded-3xl p-5 fade-in-scale ${staggerClass}`}
       style={{ backgroundColor: cardBg }}
     >
       <Icon
         size={72}
-        className="pointer-events-none absolute -bottom-3 -right-3 -rotate-12 text-white/[0.04]"
+        className="pointer-events-none absolute -bottom-3 -right-3 -rotate-12 text-white/[0.04] transition-transform duration-300 group-hover:scale-115 group-hover:-rotate-6"
         aria-hidden="true"
       />
 
       <div className="relative z-10 flex items-start justify-between gap-2">
         <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border-[2.5px] border-[#081326] shadow-[0_3px_0_0_#081326]"
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border-[2.5px] border-[#081326] shadow-[0_3px_0_0_#081326] transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-6 ${
+            isFlame ? "animate-flame" : ""
+          }`}
           style={{ backgroundColor: badgeBg }}
         >
           <Icon size={20} className="text-[#081326]" strokeWidth={2.5} />
@@ -152,7 +170,7 @@ function StatBentoCard({
       </div>
 
       <div className="relative z-10 mt-1">
-        <div className="truncate text-2xl font-extrabold tracking-tight text-white [text-shadow:0_2px_0_#081326] sm:text-3xl">
+        <div className="truncate text-2xl font-extrabold tracking-tight text-white [text-shadow:0_2px_0_#081326] sm:text-3xl transition-transform duration-200 group-hover:translate-x-0.5">
           {value}
         </div>
         {sub && <div className="mt-1 text-xs font-bold text-[#a9c7ec]">{sub}</div>}
@@ -164,7 +182,7 @@ function StatBentoCard({
 }
 
 const PAGE_SHELL =
-  "flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-5 text-[#eef6ff]";
+  "fade-in-scale flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-5 text-[#eef6ff]";
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardSummary | null>(null);
@@ -330,26 +348,26 @@ export default function DashboardPage() {
         box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.14);
       }
       .dash-cartoon-lift {
-        transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+        transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.2s ease;
       }
       .dash-cartoon-lift:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
+        transform: translateY(-4px) scale(1.008);
+        box-shadow: 0 10px 0 0 #081326, 0 0 20px rgba(91, 184, 255, 0.15), inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
       }
       .dash-btn-primary {
         background-color: #5bb8ff;
         color: #081326;
         border: 2.5px solid #081326;
         box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.45);
-        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease;
       }
       .dash-btn-primary:hover:not(:disabled) {
         background-color: #77c6ff;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(91, 184, 255, 0.35), inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
       }
       .dash-btn-primary:active:not(:disabled) {
-        transform: translateY(2px);
+        transform: translateY(2px) scale(0.98);
         box-shadow: 0 1px 0 0 #081326;
       }
       .dash-btn-secondary {
@@ -357,20 +375,20 @@ export default function DashboardPage() {
         color: #eef6ff;
         border: 2.5px solid #081326;
         box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.14);
-        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease;
       }
       .dash-btn-secondary:hover:not(:disabled) {
         background-color: #1f417d;
-        transform: translateY(-2px);
+        transform: translateY(-2px) scale(1.02);
         box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
       }
       .dash-btn-secondary:active:not(:disabled) {
-        transform: translateY(2px);
+        transform: translateY(2px) scale(0.98);
         box-shadow: 0 1px 0 0 #081326;
       }
       @keyframes dashFloat {
         0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-6px); }
+        50% { transform: translateY(-7px); }
       }
     `}</style>
   );
@@ -390,7 +408,7 @@ export default function DashboardPage() {
       {sharedStyles}
 
       {/* 1. ILLUSTRATED NIGHTBOOK HERO BANNER */}
-      <section className="dash-cartoon-card relative w-full shrink-0 overflow-hidden rounded-[28px] bg-gradient-to-br from-[#1b3a70] via-[#152d59] to-[#0f2245] p-6 sm:p-8">
+      <section className="dash-cartoon-card fade-in-scale stagger-1 relative w-full shrink-0 overflow-hidden rounded-[28px] bg-gradient-to-br from-[#1b3a70] via-[#152d59] to-[#0f2245] p-6 sm:p-8">
         <div
           className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full blur-3xl"
           style={{ background: "radial-gradient(circle, rgba(91,184,255,0.28) 0%, transparent 70%)" }}
@@ -490,7 +508,7 @@ export default function DashboardPage() {
       )}
 
       {/* 2. COLLECTIBLE CARTOON BENTO STAT CARDS */}
-      <section aria-label="Dream journal statistics" className="grid w-full shrink-0 grid-cols-2 gap-4 xl:grid-cols-4">
+      <section aria-label="Dream journal statistics" className="fade-in-scale stagger-2 grid w-full shrink-0 grid-cols-2 gap-4 xl:grid-cols-4">
         <StatBentoCard
           icon={Flame}
           label="Streak"
@@ -498,6 +516,7 @@ export default function DashboardPage() {
           sub={streak > 0 ? "Keep the magic rolling!" : "Log tonight to spark it"}
           badgeBg="#ffe082"
           cardBg="#193362"
+          staggerClass="stagger-1"
           footer={
             <div className="flex items-center gap-1.5 pt-1" aria-label={`${Math.min(streak, 7)} of 7 weekly streak dots lit`}>
               {[...Array(7)].map((_, idx) => {
@@ -522,6 +541,7 @@ export default function DashboardPage() {
           sub="Total dreams saved"
           badgeBg="#5bb8ff"
           cardBg="#173261"
+          staggerClass="stagger-2"
           footer={
             <span className="inline-flex items-center gap-1 rounded-lg border-2 border-[#081326] bg-[#0e2040] px-2.5 py-1 text-[11px] font-extrabold text-[#7ac8ff]">
               +{monthDreams} this month
@@ -536,6 +556,7 @@ export default function DashboardPage() {
           sub="Most frequent this month"
           badgeBg="#94adff"
           cardBg="#183060"
+          staggerClass="stagger-3"
           footer={
             <span className="inline-flex items-center gap-1 rounded-lg border-2 border-[#081326] bg-[#0e2040] px-2.5 py-1 text-[11px] font-extrabold text-[#b8c8ff]">
               <Sparkles size={11} /> Monthly theme
@@ -554,6 +575,7 @@ export default function DashboardPage() {
           }
           badgeBg="#64dfd0"
           cardBg="#163460"
+          staggerClass="stagger-4"
           footer={
             <span className="inline-flex items-center gap-1 rounded-lg border-2 border-[#081326] bg-[#0e2040] px-2.5 py-1 text-[11px] font-extrabold text-[#64dfd0]">
               {activeNightCount > 0 ? "Recall active" : "Ready to track"}
@@ -563,7 +585,7 @@ export default function DashboardPage() {
       </section>
 
       {/* 3. 14-DAY GLOWING RECALL WAVE CHART */}
-      <section className="dash-cartoon-card w-full shrink-0 rounded-3xl bg-[#152d58] p-5 sm:p-6">
+      <section className="dash-cartoon-card fade-in-scale stagger-3 w-full shrink-0 rounded-3xl bg-[#152d58] p-5 sm:p-6">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#64dfd0] shadow-[0_3px_0_0_#081326]">
@@ -661,7 +683,7 @@ export default function DashboardPage() {
       </section>
 
       {/* 4. STORYBOOK TWO-COLUMN SPOTLIGHT — equal-height cards */}
-      <section className="grid w-full gap-5 lg:grid-cols-2">
+      <section className="fade-in-scale stagger-4 grid w-full gap-5 lg:grid-cols-2">
         {data?.last_dream ? (
           <div className="dash-cartoon-card dash-cartoon-lift relative flex h-full flex-col gap-4 overflow-hidden rounded-3xl bg-[#162e59] p-6">
             <div className="flex items-center justify-between gap-2">

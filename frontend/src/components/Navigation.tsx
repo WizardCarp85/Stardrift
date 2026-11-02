@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -18,6 +19,8 @@ import {
   ChevronRight,
   LogOut,
   LogIn,
+  Loader2,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { getSupabaseClient } from "@/lib/supabase";
@@ -129,11 +132,14 @@ export function Sidebar() {
   const [user, setUser] = useState<User | null>(null);
   const [profileName, setProfileName] = useState<string>("");
   const [signingOut, setSigningOut] = useState(false);
+  const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
   // Restore user's collapsed preference after mount (hydration-safe)
   useEffect(() => {
+    setMounted(true);
     try {
       const saved = window.localStorage.getItem(SIDEBAR_STORAGE_KEY);
       if (saved === "true") setCollapsed(true);
@@ -346,28 +352,28 @@ export function Sidebar() {
         .cartoon-cta-new {
           border: 2.5px solid #081326;
           box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.45);
-          transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease;
         }
 
         .cartoon-cta-new:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(91, 184, 255, 0.35), inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
         }
 
         .cartoon-cta-new:active {
-          transform: translateY(2px);
+          transform: translateY(2px) scale(0.98);
           box-shadow: 0 1px 0 0 #081326;
         }
 
         .cartoon-nav-link {
           border: 2.5px solid transparent;
-          transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+          transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
         }
 
         .cartoon-nav-link:hover:not(.is-active) {
-          background-color: rgba(27, 56, 107, 0.75);
+          background-color: rgba(27, 56, 107, 0.85);
           border-color: rgba(8, 19, 38, 0.65);
-          transform: translateX(2px);
+          transform: translateX(3px);
         }
 
         .cartoon-nav-link.is-active {
@@ -381,6 +387,7 @@ export function Sidebar() {
           .cartoon-cta-new,
           .cartoon-nav-link {
             transition: none !important;
+            transform: none !important;
           }
         }
       `}</style>
@@ -526,7 +533,7 @@ export function Sidebar() {
             >
               {/* Color-Coded Icon Tile */}
               <span
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-[#081326] transition-transform group-hover:scale-105"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-[#081326] transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-3"
                 style={{
                   backgroundColor: active ? accent : "#0e2040",
                   boxShadow: active ? "0 2px 0 0 #081326" : "none",
@@ -542,7 +549,7 @@ export function Sidebar() {
               {!collapsed && (
                 <>
                   <span
-                    className={`flex-1 truncate text-sm ${
+                    className={`flex-1 truncate text-sm transition-colors duration-150 ${
                       active
                         ? "font-extrabold text-white"
                         : "font-bold text-[#bed6f5] group-hover:text-white"
@@ -553,8 +560,8 @@ export function Sidebar() {
 
                   {active && (
                     <span
-                      className="h-2.5 w-2.5 shrink-0 rounded-full border-[1.5px] border-[#081326]"
-                      style={{ backgroundColor: accent }}
+                      className="h-2.5 w-2.5 shrink-0 rounded-full border-[1.5px] border-[#081326] animate-pulse shadow-[0_0_8px_currentColor]"
+                      style={{ backgroundColor: accent, color: accent }}
                       aria-hidden="true"
                     />
                   )}
@@ -629,7 +636,7 @@ export function Sidebar() {
           {user ? (
             <button
               type="button"
-              onClick={handleSignOut}
+              onClick={() => setShowSignOutConfirm(true)}
               disabled={signingOut}
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border-2 border-transparent text-[#9bc0ed] hover:border-[#081326] hover:bg-[#1c396e] hover:text-[#ff9bb0] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffe082]"
               aria-label="Sign out"
@@ -649,6 +656,67 @@ export function Sidebar() {
           )}
         </div>
       </div>
+
+      {showSignOutConfirm && mounted && createPortal(
+        <div
+          className="settings-modal-backdrop fixed inset-0 z-[9999] flex items-center justify-center bg-[#050b18]/80 p-4 backdrop-blur-md"
+          role="presentation"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget && !signingOut) setShowSignOutConfirm(false);
+          }}
+        >
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="signout-dialog-title"
+            className="settings-card animate-pop-in relative z-10 w-full max-w-sm rounded-[26px] bg-[#182a4b] p-6 shadow-[0_12px_36px_rgba(0,0,0,0.6),0_6px_0_0_#081326]"
+            style={{ fontFamily: "'Quicksand', ui-rounded, 'Nunito', sans-serif" }}
+          >
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#081326] bg-[#ff859d] text-[#081326] shadow-[0_3px_0_0_#081326]">
+                <LogOut size={22} strokeWidth={2.6} />
+              </span>
+              <button
+                type="button"
+                onClick={() => !signingOut && setShowSignOutConfirm(false)}
+                disabled={signingOut}
+                className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#102244] text-[#cfe3fc] transition-all duration-200 hover:bg-[#1c396e] hover:rotate-90 hover:scale-105 active:scale-95"
+                aria-label="Cancel sign out"
+              >
+                <X size={17} />
+              </button>
+            </div>
+
+            <h2 id="signout-dialog-title" className="text-xl font-extrabold text-white">
+              Sign out of Stardrift?
+            </h2>
+            <p className="mt-2 text-xs font-semibold leading-relaxed text-[#b6cce9]">
+              Are you sure you want to end your session on this device? You can sign back in anytime.
+            </p>
+
+            <div className="mt-6 flex flex-col-reverse gap-2.5 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setShowSignOutConfirm(false)}
+                disabled={signingOut}
+                className="settings-button settings-button-navy px-4 py-2.5 text-xs"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                disabled={signingOut}
+                className="settings-button settings-button-danger px-4 py-2.5 text-xs"
+              >
+                {signingOut ? <Loader2 size={14} className="animate-spin" /> : <LogOut size={14} />}
+                {signingOut ? "Signing out…" : "Sign out"}
+              </button>
+            </div>
+          </section>
+        </div>,
+        document.body
+      )}
     </aside>
   );
 }
@@ -813,7 +881,9 @@ export function MobileTabBar() {
             className="group flex flex-col items-center gap-1 focus-visible:outline-none"
           >
             <span
-              className={`-mt-7 flex h-13 w-13 items-center justify-center rounded-2xl border-[2.5px] border-[#081326] shadow-[0_4px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.45)] active:translate-y-1 active:shadow-[0_1px_0_0_#081326] transition-all ${actionButton.mobileMedallionBg}`}
+              className={`-mt-7 flex h-13 w-13 items-center justify-center rounded-2xl border-[2.5px] border-[#081326] shadow-[0_4px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.45)] group-hover:scale-105 active:translate-y-1 active:shadow-[0_1px_0_0_#081326] transition-transform duration-200 ${actionButton.mobileMedallionBg} ${
+                isNewDreamPage ? "animate-ambient-pulse" : ""
+              }`}
               style={{ width: "52px", height: "52px" }}
             >
               {actionButton.mobileIcon}

@@ -39,10 +39,12 @@ function DreamStoryCard({
   dream,
   blurPreviews = false,
   dateFormat,
+  index = 0,
 }: {
   dream: Dream;
   blurPreviews?: boolean;
   dateFormat?: DateFormat;
+  index?: number;
 }) {
   const TypeIcon = DREAM_TYPE_ICONS[dream.dream_type];
   const { icon: MoodIcon, bg: moodBg } = getMoodStickerStyle(dream.mood);
@@ -51,22 +53,23 @@ function DreamStoryCard({
   return (
     <Link
       href={`/journal/${dream.id}`}
-      className="jr-card jr-lift group relative flex h-full flex-col gap-3 overflow-hidden rounded-3xl bg-[#162e59] p-5"
+      className="jr-card jr-lift group relative flex h-full flex-col gap-3 overflow-hidden rounded-3xl bg-[#162e59] p-5 fade-in-scale"
+      style={{ animationDelay: `${Math.min(index, 8) * 0.05}s` }}
     >
-      <CartoonCloud fill="#1d3d75" className="pointer-events-none absolute -bottom-7 -right-8 w-32 opacity-40 transition-opacity group-hover:opacity-70" />
+      <CartoonCloud fill="#1d3d75" className="pointer-events-none absolute -bottom-7 -right-8 w-32 opacity-40 transition-opacity duration-300 group-hover:opacity-75" />
 
       <div className="relative z-10 flex items-start justify-between gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#5bb8ff] shadow-[0_2px_0_0_#081326] transition-transform group-hover:-rotate-6">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#5bb8ff] shadow-[0_2px_0_0_#081326] transition-transform duration-200 group-hover:scale-110 group-hover:-rotate-6">
           {TypeIcon ? <TypeIcon size={18} className="text-[#081326]" strokeWidth={2.5} />
             : <Moon size={18} className="text-[#081326]" fill="#ffe082" strokeWidth={2.4} />}
         </span>
-        <span className="rounded-full border-2 border-[#081326] bg-[#0e2040] px-3 py-1 text-[11px] font-extrabold text-[#9bc0ed]">
+        <span className="rounded-full border-2 border-[#081326] bg-[#0e2040] px-3 py-1 text-[11px] font-extrabold text-[#9bc0ed] transition-colors group-hover:border-[#5bb8ff]/50">
           {formatRelativeDate(dream.dream_date, dateFormat)}
         </span>
       </div>
 
       <div className="relative z-10">
-        <h3 className="line-clamp-1 text-base font-extrabold text-white">{dream.title || "Untitled Dream"}</h3>
+        <h3 className="line-clamp-1 text-base font-extrabold text-white transition-colors duration-150 group-hover:text-[#badcff]">{dream.title || "Untitled Dream"}</h3>
         <p
           className={`mt-1.5 line-clamp-2 text-xs font-medium leading-relaxed text-[#b8d2f4] transition-all duration-200 ${
             blurPreviews ? "blur-[5px] select-none group-hover:blur-none" : ""
@@ -78,11 +81,11 @@ function DreamStoryCard({
       </div>
 
       <div className="relative z-10 flex flex-wrap items-center gap-2 pt-1">
-        <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#081326] bg-[#94adff] px-2.5 py-0.5 text-[11px] font-extrabold text-[#081326] shadow-[0_2px_0_0_#081326]">
+        <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#081326] bg-[#94adff] px-2.5 py-0.5 text-[11px] font-extrabold text-[#081326] shadow-[0_2px_0_0_#081326] transition-transform duration-200 group-hover:scale-105">
           {TypeIcon && <TypeIcon size={11} strokeWidth={2.6} />}
           {DREAM_TYPE_LABELS[dream.dream_type]}
         </span>
-        <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#081326] px-2.5 py-0.5 text-[11px] font-extrabold text-[#081326] shadow-[0_2px_0_0_#081326]" style={{ backgroundColor: moodBg }}>
+        <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#081326] px-2.5 py-0.5 text-[11px] font-extrabold text-[#081326] shadow-[0_2px_0_0_#081326] transition-transform duration-200 group-hover:scale-105" style={{ backgroundColor: moodBg }}>
           <MoodIcon size={11} strokeWidth={2.6} />
           {MOOD_LABELS[dream.mood]}
         </span>
@@ -106,7 +109,7 @@ function DreamStoryCard({
       {dream.tags_detail?.length > 0 && (
         <div className="relative z-10 flex flex-wrap items-center gap-1.5">
           {dream.tags_detail.slice(0, 3).map((tag) => (
-            <span key={tag.id} className="inline-flex items-center gap-0.5 rounded-lg border-2 border-[#081326] bg-[#1c396e] px-2 py-0.5 text-[11px] font-bold text-[#cfe3fc]">
+            <span key={tag.id} className="inline-flex items-center gap-0.5 rounded-lg border-2 border-[#081326] bg-[#1c396e] px-2 py-0.5 text-[11px] font-bold text-[#cfe3fc] transition-colors duration-150 group-hover:bg-[#254b8c] group-hover:text-white">
               <Hash size={9} strokeWidth={3} />{tag.name}
             </span>
           ))}
@@ -118,7 +121,7 @@ function DreamStoryCard({
 
       <span className="relative z-10 mt-auto inline-flex items-center gap-1 pt-2 text-[11px] font-extrabold text-[#6bc2ff]">
         Read entry
-        <ChevronRight size={13} strokeWidth={3} className="transition-transform group-hover:translate-x-1" />
+        <ChevronRight size={13} strokeWidth={3} className="transition-transform duration-200 group-hover:translate-x-1.5" />
       </span>
     </Link>
   );
@@ -203,15 +206,27 @@ export default function JournalPage() {
 
   const clearFilters = () => { setQ(""); setTypeFilter(""); setMoodFilter(""); };
 
+  if (loading && dreams.length === 0) {
+    return (
+      <div
+        className="flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col"
+        style={{ fontFamily: JOURNAL_FONT }}
+      >
+        <JournalStyles />
+        <DreamLoader variant="full" message="Gathering your dreams…" />
+      </div>
+    );
+  }
+
   return (
     <div
-      className="flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-4 text-[#eef6ff]"
+      className="fade-in-scale flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-4 text-[#eef6ff]"
       style={{ fontFamily: JOURNAL_FONT }}
     >
       <JournalStyles />
 
       {/* Hero */}
-      <section className="jr-card relative w-full shrink-0 overflow-hidden rounded-[28px] bg-gradient-to-br from-[#1b3a70] via-[#152d59] to-[#0f2245] p-6 sm:p-8">
+      <section className="jr-card fade-in-scale stagger-1 relative w-full shrink-0 overflow-hidden rounded-[28px] bg-gradient-to-br from-[#1b3a70] via-[#152d59] to-[#0f2245] p-6 sm:p-8">
         <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full blur-3xl"
           style={{ background: "radial-gradient(circle, rgba(91,184,255,0.28) 0%, transparent 70%)" }} aria-hidden="true" />
         <CartoonCloud fill="#214685" className="pointer-events-none absolute -bottom-6 -right-8 hidden w-56 opacity-80 sm:block" />
@@ -242,7 +257,7 @@ export default function JournalPage() {
       </section>
 
       {/* Search + filters */}
-      <section className="flex w-full shrink-0 flex-wrap items-center gap-3">
+      <section className="fade-in-scale stagger-2 flex w-full shrink-0 flex-wrap items-center gap-3">
         <div className="relative min-w-[220px] flex-1">
           <Search size={18} strokeWidth={2.4} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#6bc2ff]" aria-hidden="true" />
           <input
@@ -324,7 +339,7 @@ export default function JournalPage() {
       )}
 
       {/* Results fill remaining space */}
-      <div className="flex min-h-0 w-full flex-1 flex-col">
+      <div className="fade-in-scale stagger-3 flex min-h-0 w-full flex-1 flex-col">
         {loading && dreams.length === 0 ? (
           <DreamLoader variant="section" message="Gathering your dreams…" />
         ) : dreams.length === 0 ? (
@@ -358,8 +373,8 @@ export default function JournalPage() {
         ) : (
           <>
             <div className="grid w-full gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {dreams.map((d) => (
-                <DreamStoryCard key={d.id} dream={d} blurPreviews={blurPreviews} dateFormat={dateFormat} />
+              {dreams.map((d, idx) => (
+                <DreamStoryCard key={d.id} dream={d} blurPreviews={blurPreviews} dateFormat={dateFormat} index={idx} />
               ))}
               {loadingMore && [...Array(3)].map((_, i) => <DreamSkeleton key={`s-${i}`} />)}
             </div>

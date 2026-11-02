@@ -306,27 +306,27 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
           font-weight: 600;
           padding: 0.65rem 0.9rem;
           outline: none;
-          transition: border-color 0.16s ease, box-shadow 0.16s ease;
+          transition: border-color 0.18s ease, box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.18s ease;
         }
         .cartoon-form-input:focus {
           border-color: #5bb8ff;
           background: #102347;
-          box-shadow: 0 0 0 3px rgba(91, 184, 255, 0.24);
+          box-shadow: 0 0 0 3px rgba(91, 184, 255, 0.24), 0 0 16px rgba(91, 184, 255, 0.12);
         }
         .cartoon-form-btn-primary {
           background-color: #5bb8ff;
           color: #081326;
           border: 2.5px solid #081326;
           box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.45);
-          transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+          transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease;
         }
         .cartoon-form-btn-primary:hover:not(:disabled) {
           background-color: #77c6ff;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(91, 184, 255, 0.35), inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
         }
         .cartoon-form-btn-primary:active:not(:disabled) {
-          transform: translateY(2px);
+          transform: translateY(2px) scale(0.98);
           box-shadow: 0 1px 0 0 #081326;
         }
         .cartoon-form-btn-secondary {
@@ -339,15 +339,15 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
           color: #eef6ff;
           border: 2.5px solid #081326;
           box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.14);
-          transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+          transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease;
         }
         .cartoon-form-btn-secondary:hover {
           background-color: #1f417d;
-          transform: translateY(-2px);
-          box-shadow: 0 6px 0 0 #081326;
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
         }
         .cartoon-form-btn-secondary:active {
-          transform: translateY(2px);
+          transform: translateY(2px) scale(0.98);
           box-shadow: 0 1px 0 0 #081326;
         }
       `}</style>
@@ -363,25 +363,47 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
             <span className="text-sm font-bold text-white">How do you want to record?</span>
           </div>
 
-          <div className="inline-flex rounded-xl border-2 border-[#081326] bg-[#0e2040] p-1 shadow-[0_2px_0_0_#081326]">
+          <div
+            role="tablist"
+            aria-label="Recording mode"
+            className="inline-flex rounded-2xl border-[2.5px] border-[#081326] bg-[#0c1a36] p-1 shadow-[0_2px_0_0_#081326] select-none"
+          >
             {(["speak", "type"] as const).map((m) => {
               const active = inputMode === m;
               return (
                 <button
                   key={m}
                   type="button"
+                  role="tab"
+                  aria-selected={active}
                   onClick={() => {
                     setInputMode(m);
                     update("input_method", m === "speak" ? "voice" : "text");
                   }}
-                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all ${
+                  className={`relative flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 ${
                     active
-                      ? "bg-[#5bb8ff] text-[#081326] border-2 border-[#081326] shadow-[0_2px_0_0_#081326]"
-                      : "text-[#8cb2e0] hover:text-white border-2 border-transparent"
+                      ? "bg-[#5bb8ff] text-[#081326] border-2 border-[#081326] shadow-[0_2px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.45)]"
+                      : "text-[#8cb2e0] hover:text-white hover:bg-white/5 border-2 border-transparent"
                   }`}
                 >
-                  {m === "speak" ? <Mic size={13} strokeWidth={2.8} /> : <Type size={13} strokeWidth={2.8} />}
-                  {m === "speak" ? "Record with Voice" : "Type it out"}
+                  {m === "speak" ? (
+                    <Mic
+                      size={14}
+                      strokeWidth={2.8}
+                      className={`transition-transform duration-200 ${
+                        active ? "scale-110 -rotate-3 text-[#081326]" : "text-[#6bc2ff]"
+                      }`}
+                    />
+                  ) : (
+                    <Type
+                      size={14}
+                      strokeWidth={2.8}
+                      className={`transition-transform duration-200 ${
+                        active ? "scale-110 text-[#081326]" : "text-[#6bc2ff]"
+                      }`}
+                    />
+                  )}
+                  <span>{m === "speak" ? "Record with Voice" : "Type it out"}</span>
                 </button>
               );
             })}
@@ -436,43 +458,45 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
             )}
           </div>
 
-          {inputMode === "speak" ? (
-            <div className="rounded-2xl border-2 border-[#081326] bg-[#0e2040] p-4 flex flex-col items-center gap-4 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]">
-              <VoiceRecorderButton onTranscript={handleVoiceTranscript} lang={voiceLanguage} />
+          <div key={inputMode} className="animate-fade-in-scale">
+            {inputMode === "speak" ? (
+              <div className="rounded-2xl border-2 border-[#081326] bg-[#0e2040] p-4 flex flex-col items-center gap-4 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]">
+                <VoiceRecorderButton onTranscript={handleVoiceTranscript} lang={voiceLanguage} />
 
-              <div className="w-full">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7ea4d4]">
-                    Live Transcript (Editable)
-                  </span>
-                  <span className="text-[10px] font-bold text-[#64dfd0]">
-                    {form.body ? "Voice transcribed" : "Voice detected"}
-                  </span>
+                <div className="w-full">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7ea4d4]">
+                      Live Transcript (Editable)
+                    </span>
+                    <span className="text-[10px] font-bold text-[#64dfd0]">
+                      {form.body ? "Voice transcribed" : "Voice detected"}
+                    </span>
+                  </div>
+                  <textarea
+                    id="dream-body-voice"
+                    value={form.body}
+                    onChange={(e) => handleBodyChange(e.target.value)}
+                    className="cartoon-form-input text-sm leading-relaxed"
+                    rows={5}
+                    placeholder="Your words will transcribe here as you speak… or tap here to edit anytime."
+                    style={{ resize: "vertical" }}
+                    required
+                  />
                 </div>
-                <textarea
-                  id="dream-body-voice"
-                  value={form.body}
-                  onChange={(e) => handleBodyChange(e.target.value)}
-                  className="cartoon-form-input text-sm leading-relaxed"
-                  rows={5}
-                  placeholder="Your words will transcribe here as you speak… or tap here to edit anytime."
-                  style={{ resize: "vertical" }}
-                  required
-                />
               </div>
-            </div>
-          ) : (
-            <textarea
-              id="dream-body"
-              value={form.body}
-              onChange={(e) => handleBodyChange(e.target.value)}
-              className="cartoon-form-input text-sm leading-relaxed"
-              rows={6}
-              placeholder="Describe your dream in as much detail as you recall: colors, people, feelings, floating moments…"
-              style={{ resize: "vertical" }}
-              required
-            />
-          )}
+            ) : (
+              <textarea
+                id="dream-body"
+                value={form.body}
+                onChange={(e) => handleBodyChange(e.target.value)}
+                className="cartoon-form-input text-sm leading-relaxed"
+                rows={6}
+                placeholder="Describe your dream in as much detail as you recall: colors, people, feelings, floating moments…"
+                style={{ resize: "vertical" }}
+                required
+              />
+            )}
+          </div>
         </div>
 
         {/* Date + Dream Type Row */}
@@ -686,7 +710,7 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
               {form.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 rounded-full border-2 border-[#081326] bg-[#1c396e] pl-2.5 pr-1 py-0.5 text-xs font-extrabold text-[#cfe3fc] shadow-[0_2px_0_0_#081326]"
+                  className="animate-pop-in inline-flex items-center gap-1 rounded-full border-2 border-[#081326] bg-[#1c396e] pl-2.5 pr-1 py-0.5 text-xs font-extrabold text-[#cfe3fc] shadow-[0_2px_0_0_#081326]"
                 >
                   <Hash size={10} strokeWidth={3} className="text-[#64dfd0]" />
                   {tag}
@@ -694,7 +718,7 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
                     type="button"
                     onClick={() => removeTag(tag)}
                     aria-label={`Remove tag ${tag}`}
-                    className="flex h-4 w-4 items-center justify-center rounded-full hover:bg-white/15 text-[#ff859d]"
+                    className="flex h-4 w-4 items-center justify-center rounded-full hover:bg-white/15 text-[#ff859d] transition-colors"
                   >
                     <X size={10} strokeWidth={3} />
                   </button>
@@ -739,7 +763,7 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
                   key={tag}
                   type="button"
                   onClick={() => addTag(tag)}
-                  className="inline-flex items-center gap-1 rounded-full border-2 border-dashed border-[#5bb8ff]/60 bg-[#0e2040] px-2.5 py-0.5 text-[11px] font-bold text-[#5bb8ff] hover:bg-[#162e59]"
+                  className="inline-flex items-center gap-1 rounded-full border-2 border-dashed border-[#5bb8ff]/60 bg-[#0e2040] px-2.5 py-0.5 text-[11px] font-bold text-[#5bb8ff] hover:bg-[#162e59] hover:scale-105 active:scale-95 transition-transform"
                 >
                   <Plus size={10} strokeWidth={3} /> #{tag}
                 </button>

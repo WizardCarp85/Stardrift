@@ -25,13 +25,13 @@ const TIPS = [
 export default function NewDreamPage() {
   return (
     <div
-      className="flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-4 text-[#eef6ff]"
+      className="fade-in-scale flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-4 text-[#eef6ff]"
       style={{ fontFamily: JOURNAL_FONT }}
     >
       <JournalStyles />
 
       {/* Illustrated banner - w-full */}
-      <section className="jr-card relative flex w-full shrink-0 flex-col overflow-hidden rounded-[28px] bg-gradient-to-br from-[#1b3a70] via-[#152d59] to-[#0f2245] p-6 sm:p-8">
+      <section className="jr-card relative flex w-full shrink-0 flex-col overflow-hidden rounded-[28px] bg-gradient-to-br from-[#1b3a70] via-[#152d59] to-[#0f2245] p-6 sm:p-8 animate-pop-in">
         <div
           className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full blur-3xl"
           style={{ background: "radial-gradient(circle, rgba(91,184,255,0.28) 0%, transparent 70%)" }}
@@ -67,8 +67,11 @@ export default function NewDreamPage() {
 
       {/* Recall tips - w-full */}
       <section className="grid w-full shrink-0 gap-3 sm:grid-cols-3">
-        {TIPS.map(({ icon: Icon, bg, title, desc }) => (
-          <div key={title} className="jr-card jr-lift flex flex-col gap-2 rounded-2xl bg-[#152c57] p-4">
+        {TIPS.map(({ icon: Icon, bg, title, desc }, idx) => (
+          <div
+            key={title}
+            className={`jr-card jr-lift fade-in-scale flex flex-col gap-2 rounded-2xl bg-[#152c57] p-4 stagger-${idx + 1}`}
+          >
             <span className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-[#081326] shadow-[0_2px_0_0_#081326]" style={{ backgroundColor: bg }}>
               <Icon size={18} className="text-[#081326]" strokeWidth={2.5} />
             </span>
@@ -79,7 +82,7 @@ export default function NewDreamPage() {
       </section>
 
       {/* The form - fills remaining height/width */}
-      <div className="flex w-full flex-1 flex-col">
+      <div className="fade-in-scale stagger-3 flex w-full flex-1 flex-col">
         <DreamForm mode="new" />
       </div>
 

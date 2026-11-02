@@ -25,7 +25,7 @@ export function CartoonCloud({
       viewBox="0 0 220 90"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className={`animate-float-slow transition-transform duration-500 ${className}`}
       aria-hidden="true"
     >
       <path
@@ -62,7 +62,7 @@ export function CartoonSparkle({
       height={size}
       viewBox="0 0 24 24"
       fill="none"
-      className={className}
+      className={`animate-twinkle hover:scale-125 transition-transform duration-300 ${className}`}
       aria-hidden="true"
     >
       <path
@@ -121,12 +121,12 @@ export function JournalStyles() {
       }
 
       .jr-lift {
-        transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+        transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.2s ease;
       }
 
       .jr-lift:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
+        transform: translateY(-4px) scale(1.008);
+        box-shadow: 0 10px 0 0 #081326, 0 0 24px rgba(91, 184, 255, 0.15), inset 0 2px 0 0 rgba(255, 255, 255, 0.26);
       }
 
       .jr-btn-primary,
@@ -139,7 +139,7 @@ export function JournalStyles() {
         border: 2.5px solid #081326;
         border-radius: 1rem;
         font-weight: 800;
-        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease;
       }
 
       .jr-btn-primary {
@@ -149,8 +149,8 @@ export function JournalStyles() {
       }
       .jr-btn-primary:hover:not(:disabled) {
         background-color: #77c6ff;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(91, 184, 255, 0.35), inset 0 2px 0 0 rgba(255, 255, 255, 0.55);
       }
 
       .jr-btn-secondary {
@@ -160,7 +160,7 @@ export function JournalStyles() {
       }
       .jr-btn-secondary:hover:not(:disabled) {
         background-color: #1f417d;
-        transform: translateY(-2px);
+        transform: translateY(-2px) scale(1.02);
         box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
       }
 
@@ -171,14 +171,14 @@ export function JournalStyles() {
       }
       .jr-btn-danger:hover:not(:disabled) {
         background-color: #ff9cb0;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 6px 0 0 #081326, 0 0 16px rgba(255, 133, 157, 0.35), inset 0 2px 0 0 rgba(255, 255, 255, 0.5);
       }
 
       .jr-btn-primary:active:not(:disabled),
       .jr-btn-secondary:active:not(:disabled),
       .jr-btn-danger:active:not(:disabled) {
-        transform: translateY(2px);
+        transform: translateY(2px) scale(0.98);
         box-shadow: 0 1px 0 0 #081326;
       }
 

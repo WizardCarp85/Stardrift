@@ -127,24 +127,36 @@ export function VoiceRecorderButton({ onTranscript, disabled, lang = "en-US" }: 
     >
       <style>{`
         @keyframes rippleRing {
-          0% { transform: scale(0.92); opacity: 0.8; }
-          50% { transform: scale(1.16); opacity: 0.25; }
-          100% { transform: scale(0.92); opacity: 0.8; }
+          0% { transform: scale(0.94); opacity: 0.85; }
+          50% { transform: scale(1.22); opacity: 0.18; }
+          100% { transform: scale(0.94); opacity: 0.85; }
+        }
+        @keyframes rippleOuterRing {
+          0% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.42); opacity: 0; }
+          100% { transform: scale(1); opacity: 0.5; }
         }
         @keyframes waveBounce {
-          0%, 100% { transform: scaleY(0.4); }
-          50% { transform: scaleY(1.15); }
+          0%, 100% { transform: scaleY(0.35); }
+          50% { transform: scaleY(1.2); }
         }
       `}</style>
 
       {/* Button with animated ripple */}
       <div className="relative flex items-center justify-center">
         {isListening && (
-          <span
-            className="pointer-events-none absolute h-32 w-32 rounded-full border-4 border-[#ff859d]"
-            style={{ animation: "rippleRing 1.6s ease-in-out infinite" }}
-            aria-hidden="true"
-          />
+          <>
+            <span
+              className="pointer-events-none absolute h-32 w-32 rounded-full border-4 border-[#ff859d]"
+              style={{ animation: "rippleRing 1.6s ease-in-out infinite" }}
+              aria-hidden="true"
+            />
+            <span
+              className="pointer-events-none absolute h-32 w-32 rounded-full border-2 border-[#ffb3c6]"
+              style={{ animation: "rippleOuterRing 1.6s ease-in-out infinite", animationDelay: "0.2s" }}
+              aria-hidden="true"
+            />
+          </>
         )}
 
         <button
@@ -152,8 +164,8 @@ export function VoiceRecorderButton({ onTranscript, disabled, lang = "en-US" }: 
           onClick={isListening ? stopListening : startListening}
           disabled={disabled}
           aria-label={isListening ? "Stop recording dream" : "Start voice recording"}
-          className={`relative z-10 flex h-24 w-24 items-center justify-center rounded-3xl transition-transform active:translate-y-1 ${
-            isListening ? "bg-[#ff859d]" : "bg-[#5bb8ff] hover:bg-[#78c8ff]"
+          className={`relative z-10 flex h-24 w-24 items-center justify-center rounded-3xl transition-all duration-200 hover:scale-105 active:scale-95 active:translate-y-1 ${
+            isListening ? "bg-[#ff859d] shadow-[0_0_24px_rgba(255,133,157,0.5)]" : "bg-[#5bb8ff] hover:bg-[#78c8ff] hover:shadow-[0_0_24px_rgba(91,184,255,0.4)]"
           }`}
           style={{
             border: "3px solid #081326",

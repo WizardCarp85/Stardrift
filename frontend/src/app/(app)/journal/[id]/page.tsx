@@ -165,13 +165,13 @@ export default function DreamDetailPage() {
       <JournalStyles />
 
       {/* Top Header / Action Bar */}
-      <header className="flex w-full shrink-0 flex-wrap items-center justify-between gap-3">
+      <header className="flex w-full shrink-0 flex-wrap items-center justify-between gap-3 fade-up">
         <Link
           href="/journal"
-          className="jr-btn-secondary inline-flex items-center gap-2 px-4 py-2.5 text-sm font-extrabold"
+          className="jr-btn-secondary group inline-flex items-center gap-2 px-4 py-2.5 text-sm font-extrabold"
           aria-label="Back to journal"
         >
-          <ArrowLeft size={16} strokeWidth={2.8} /> Back to journal
+          <ArrowLeft size={16} strokeWidth={2.8} className="transition-transform duration-200 group-hover:-translate-x-1" /> Back to journal
         </Link>
 
         <div className="flex items-center gap-2.5">
