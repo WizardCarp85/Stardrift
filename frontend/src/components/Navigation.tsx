@@ -22,11 +22,13 @@ import {
   LogIn,
   Loader2,
   X,
+  Wand2,
   type LucideIcon,
 } from "lucide-react";
 import { getSupabaseClient } from "@/lib/supabase";
 import { profileApi } from "@/lib/api";
 import { subscribeCaptureState, type CaptureStateDetail } from "@/lib/captureState";
+import { useCursor } from "@/context/CursorContext";
 import type { User } from "@supabase/supabase-js";
 
 const BRAND = { first: "Star", second: "drift" };
@@ -109,6 +111,7 @@ function MiniSparkle({
 
 
 export function Sidebar() {
+  const { openStudio, isStudioOpen } = useCursor();
   const [collapsed, setCollapsed] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [profileName, setProfileName] = useState<string>("");
@@ -616,7 +619,24 @@ export function Sidebar() {
       </nav>
 
       {/* Bottom atmospheric container + Dreamer Profile Pod */}
-      <div className="relative mt-auto px-3 pb-4 pt-4">
+      <div className="relative mt-auto px-3 pb-4 pt-1">
+        {/* Quick Cursor Settings Icon launcher right above profile pod */}
+        <div className={`mb-1.5 flex ${collapsed ? "justify-center" : "justify-end"}`}>
+          <button
+            type="button"
+            onClick={openStudio}
+            className={`flex h-7 w-7 items-center justify-center rounded-xl border-2 border-[#081326] transition-all duration-150 active:scale-90 shadow-[0_2px_0_0_#081326] cursor-pointer ${
+              isStudioOpen
+                ? "bg-[#ffe082] text-[#081326]"
+                : "bg-[#0e2040] text-[#ffe082] hover:bg-[#162e59] hover:text-white"
+            }`}
+            title="Cursor Settings"
+            aria-label="Cursor Settings"
+          >
+            <Wand2 size={13} strokeWidth={2.4} />
+          </button>
+        </div>
+
         <div
           className={`group relative z-10 rounded-2xl border-[2.5px] border-[#081326] bg-[#0f2040] shadow-[0_4px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.08)] ${
             collapsed ? "p-2 flex flex-col items-center gap-2" : "p-3 flex items-center gap-2.5"
@@ -1014,6 +1034,7 @@ export function MobileTabBar() {
 }
 
 export function MobileHeader() {
+  const { openStudio, isStudioOpen } = useCursor();
   const [user, setUser] = useState<User | null>(null);
   const [profileName, setProfileName] = useState<string>("");
 
@@ -1085,18 +1106,34 @@ export function MobileHeader() {
         </span>
       </Link>
 
-      <Link
-        href="/profile"
-        className="flex items-center gap-2 rounded-xl border-2 border-[#081326] bg-[#0f2040] px-2.5 py-1.5 shadow-[0_2px_0_0_#081326] active:translate-y-0.5 transition-transform"
-        title={`Profile: ${displayName}`}
-      >
-        <div className="flex h-6 w-6 items-center justify-center rounded-lg border-[1.5px] border-[#081326] bg-[#64dfd0] text-xs font-black text-[#081326]">
-          {userInitial}
-        </div>
-        <span className="max-w-[120px] truncate text-xs font-bold text-white">
-          {displayName}
-        </span>
-      </Link>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={openStudio}
+          className={`flex h-8 w-8 items-center justify-center rounded-xl border-2 border-[#081326] transition-transform active:scale-95 shadow-[0_2px_0_0_#081326] ${
+            isStudioOpen
+              ? "bg-[#ffe082] text-[#081326]"
+              : "bg-[#0f2040] text-[#ffe082] hover:bg-[#162d58]"
+          }`}
+          aria-label="Cursor Settings"
+          title="Cursor Settings"
+        >
+          <Wand2 size={16} strokeWidth={2.4} />
+        </button>
+
+        <Link
+          href="/profile"
+          className="flex items-center gap-2 rounded-xl border-2 border-[#081326] bg-[#0f2040] px-2.5 py-1.5 shadow-[0_2px_0_0_#081326] active:translate-y-0.5 transition-transform"
+          title={`Profile: ${displayName}`}
+        >
+          <div className="flex h-6 w-6 items-center justify-center rounded-lg border-[1.5px] border-[#081326] bg-[#64dfd0] text-xs font-black text-[#081326]">
+            {userInitial}
+          </div>
+          <span className="max-w-[120px] truncate text-xs font-bold text-white">
+            {displayName}
+          </span>
+        </Link>
+      </div>
     </header>
   );
 }

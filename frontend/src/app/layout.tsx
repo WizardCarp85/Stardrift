@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { CursorProvider } from "@/context/CursorContext";
 
 export const metadata: Metadata = {
   title: "Stardrift — Your Personal Dream Journal",
@@ -30,7 +31,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#0b1024" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body>{children}</body>
+      <body>
+        <CursorProvider>{children}</CursorProvider>
+      </body>
     </html>
   );
 }

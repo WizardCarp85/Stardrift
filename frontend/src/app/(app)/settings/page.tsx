@@ -31,11 +31,13 @@ import {
   ShieldCheck,
   Sparkles,
   Trash2,
+  Wand2,
   X,
   type LucideIcon,
 } from "lucide-react";
 import { dreamsApi, profileApi } from "@/lib/api";
 import { getSupabaseClient } from "@/lib/supabase";
+import { useCursor } from "@/context/CursorContext";
 import type { Dream, DreamType } from "@/types";
 
 /* ------------------------------------------------------------------ */
@@ -671,6 +673,7 @@ function downloadFile(content: BlobPart, filename: string, type: string) {
 
 export default function SettingsPage() {
   const router = useRouter();
+  const { openStudio } = useCursor();
 
   const [activeSection, setActiveSection] = useState<SettingsSectionId>("capture");
   const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS);
@@ -1490,7 +1493,7 @@ export default function SettingsPage() {
                   />
                 </SettingRow>
 
-                <SettingRow title="Week starts on" description="Controls the first day shown in calendar-like views." border={false}>
+                <SettingRow title="Week starts on" description="Controls the first day shown in calendar-like views.">
                   <ChoiceButtons
                     value={settings.weekStart}
                     onChange={(v) => updateSetting("weekStart", v)}
@@ -1500,6 +1503,22 @@ export default function SettingsPage() {
                       { value: "sunday", label: "Sunday" },
                     ]}
                   />
+                </SettingRow>
+
+                <SettingRow
+                  title="Cursor Style"
+                  description="Customize your celestial cursor variant, aura trail ring, and sparkle bursts."
+                  border={false}
+                >
+                  <button
+                    type="button"
+                    onClick={openStudio}
+                    className="settings-button settings-button-navy shrink-0 px-3.5 py-2 text-xs font-bold transition-all duration-150 flex items-center gap-2"
+                    data-cursor-accent="gold"
+                  >
+                    <Wand2 size={14} strokeWidth={2.4} className="text-[#ffe082]" />
+                    Customize Cursor
+                  </button>
                 </SettingRow>
               </>
             )}

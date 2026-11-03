@@ -72,6 +72,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================================
+   Stardrift Custom Cursor System
+   ============================================================ */
+@media (pointer: fine) {
+  body.stardrift-cursor-active,
+  body.stardrift-cursor-active *,
+  body.stardrift-cursor-active a,
+  body.stardrift-cursor-active button,
+  body.stardrift-cursor-active input,
+  body.stardrift-cursor-active textarea,
+  body.stardrift-cursor-active select,
+  body.stardrift-cursor-active [role="button"] {
+    cursor: none !important;
+  }
+}
+
+/* ============================================================
    Drifting star glow background (CSS-only, landing page)
    ============================================================ */
 .aurora-bg {
