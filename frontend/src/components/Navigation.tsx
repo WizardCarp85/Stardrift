@@ -619,21 +619,44 @@ export function Sidebar() {
       </nav>
 
       {/* Bottom atmospheric container + Dreamer Profile Pod */}
-      <div className="relative mt-auto px-3 pb-4 pt-1">
-        {/* Quick Cursor Settings Icon launcher right above profile pod */}
-        <div className={`mb-1.5 flex ${collapsed ? "justify-center" : "justify-end"}`}>
+      <div className="relative mt-auto px-3 pb-4 pt-2">
+        {/* Cursor Settings Companion Button */}
+        <div className="mb-2.5">
           <button
             type="button"
             onClick={openStudio}
-            className={`flex h-7 w-7 items-center justify-center rounded-xl border-2 border-[#081326] transition-all duration-150 active:scale-90 shadow-[0_2px_0_0_#081326] cursor-pointer ${
-              isStudioOpen
-                ? "bg-[#ffe082] text-[#081326]"
-                : "bg-[#0e2040] text-[#ffe082] hover:bg-[#162e59] hover:text-white"
-            }`}
-            title="Cursor Settings"
-            aria-label="Cursor Settings"
+            className={`group relative flex w-full items-center justify-between rounded-2xl border-2 border-[#081326] bg-[#0c1b38] shadow-[0_2.5px_0_0_#081326] hover:bg-[#142850] active:translate-y-0.5 active:shadow-[0_1px_0_0_#081326] transition-all cursor-pointer ${
+              collapsed ? "h-11 w-11 mx-auto justify-center p-0" : "px-3 py-2"
+            } ${isStudioOpen ? "bg-[#18366b] border-[#ffe082]" : ""}`}
+            title="Customize Cursor"
+            aria-label="Customize Cursor"
+            data-cursor-accent="gold"
           >
-            <Wand2 size={13} strokeWidth={2.4} />
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border-[1.5px] border-[#081326] bg-[#ffe082] text-[#081326] shadow-[0_1px_0_0_#081326] transition-transform duration-150 group-hover:scale-110 group-hover:-rotate-3">
+                <Wand2 size={14} strokeWidth={2.4} />
+              </span>
+              {!collapsed && (
+                <span className="truncate text-xs font-bold text-[#bed6f5] group-hover:text-white transition-colors">
+                  Cursor Style
+                </span>
+              )}
+            </div>
+
+            {!collapsed && (
+              <span className="rounded-full border border-[#081326] bg-[#070e1c] px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-[#ffe082] shadow-[0_1px_0_0_#081326]">
+                ✦ Edit
+              </span>
+            )}
+
+            {collapsed && (
+              <span
+                role="tooltip"
+                className="pointer-events-none invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-150 absolute left-[calc(100%+14px)] top-1/2 -translate-y-1/2 whitespace-nowrap rounded-xl border-2 border-[#081326] bg-[#162e59] px-3 py-1.5 text-xs font-extrabold text-white shadow-[0_3px_0_0_#081326] z-50"
+              >
+                Cursor Style
+              </span>
+            )}
           </button>
         </div>
 
