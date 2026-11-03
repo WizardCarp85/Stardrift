@@ -34,6 +34,7 @@ import {
 import { VoiceRecorderButton } from "@/components/VoiceRecorder";
 import { CartoonDatePicker } from "@/components/CartoonDatePicker";
 import { CartoonDreamTypeSelect } from "@/components/CartoonDreamTypeSelect";
+import { ImportDropzone } from "@/components/ImportDropzone";
 import { emitCaptureState } from "@/lib/captureState";
 
 const MOOD_OPTIONS: Mood[] = [
@@ -259,6 +260,37 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
     handleBodyChange(text);
   }
 
+  function handleApplyImport(data: {
+    title: string;
+    body: string;
+    date: string | null;
+    action: "replace" | "append";
+    filename: string;
+    warnings: string[];
+  }) {
+    setForm((prev) => {
+      const combinedBody =
+        data.action === "append" && prev.body.trim()
+          ? `${prev.body.trim()}\n\n${data.body}`
+          : data.body;
+
+      return {
+        ...prev,
+        title: data.title || prev.title,
+        body: combinedBody,
+        dream_date: data.date || prev.dream_date,
+        input_method: "text",
+      };
+    });
+
+    setInputMode("type");
+    handleBodyChange(
+      data.action === "append" && form.body.trim()
+        ? `${form.body.trim()}\n\n${data.body}`
+        : data.body
+    );
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -354,6 +386,17 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
 
       {/* Main Storybook Form Card */}
       <div className="cartoon-form-card rounded-[26px] bg-[#162e59] p-5 sm:p-6">
+        {/* Document Import Dropzone (available when creating a new dream) */}
+        {mode === "new" && (
+          <div className="mb-5 pb-5 border-b-2 border-[#081326]/50">
+            <ImportDropzone
+              currentBody={form.body}
+              onApplyImport={handleApplyImport}
+              disabled={saving}
+            />
+          </div>
+        )}
+
         {/* Input Mode Selector */}
         <div className="flex items-center justify-between gap-4 flex-wrap pb-3 border-b-2 border-[#081326]/50">
           <div>

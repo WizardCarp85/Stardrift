@@ -2,6 +2,7 @@
 Django settings for Stardrift backend.
 """
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "dreams",
+    "imports",
 ]
 
 MIDDLEWARE = [
@@ -74,6 +76,14 @@ def parse_db_url(url):
     }
 
 DATABASES = {"default": parse_db_url(DATABASE_URL)}
+
+if "test" in sys.argv:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

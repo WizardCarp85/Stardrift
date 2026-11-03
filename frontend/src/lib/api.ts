@@ -40,8 +40,9 @@ async function apiFetch<T>(
   options: RequestInit = {}
 ): Promise<T> {
   const token = await getAuthToken();
+  const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    ...(isFormData ? {} : { "Content-Type": "application/json" }),
     ...(options.headers as Record<string, string>),
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
@@ -52,8 +53,20 @@ async function apiFetch<T>(
   });
 
   if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`API ${res.status}: ${body}`);
+    const rawText = await res.text();
+    let message = `API ${res.status}`;
+    let code: string | undefined;
+    try {
+      const parsed = JSON.parse(rawText);
+      if (parsed?.error) message = parsed.error;
+      if (parsed?.code) code = parsed.code;
+    } catch {
+      if (rawText) message = rawText;
+    }
+    const err = new Error(message) as Error & { code?: string; status?: number };
+    err.code = code;
+    err.status = res.status;
+    throw err;
   }
 
   if (res.status === 204) return undefined as T;
@@ -139,6 +152,19 @@ export const profileApi = {
       body: JSON.stringify(data),
     }),
   delete: () => apiFetch<void>("/settings/profile/", { method: "DELETE" }),
+};
+
+// ── File Import ─────────────────────────────────────────────────────────────
+
+export const importApi = {
+  upload: (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return apiFetch<import("@/types").ImportPreviewResponse>("/import/", {
+      method: "POST",
+      body: formData,
+    });
+  },
 };
 
 export default apiFetch;

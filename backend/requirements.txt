@@ -7,3 +7,7 @@ django-cors-headers==4.9.0
 openai==3.37.0
 PyJWT==2.15.1
 gunicorn>=23.0.0
+pypdf>=6.0.0
+python-docx>=1.2.0
+charset-normalizer>=3.4.0
+

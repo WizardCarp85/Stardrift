@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowLeft, Feather, Mic, Tag, Sparkles } from "lucide-react";
+import { ArrowLeft, Mic, Sparkles } from "lucide-react";
 import { DreamForm } from "@/components/DreamForm";
+import { NewDreamTips } from "@/components/NewDreamTips";
 import {
   CartoonCloud,
   CartoonSparkle,
@@ -13,14 +14,8 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Record Dream — Stardrift",
-  description: "Record a new dream entry via voice or text in your private dream journal",
+  description: "Record a new dream entry via voice, text, or file import in your private dream journal",
 };
-
-const TIPS = [
-  { icon: Mic, bg: "#ffe082", title: "Speak it out", desc: "Speak while still half-awake — voice dictation captures fleeting details instantly." },
-  { icon: Feather, bg: "#5bb8ff", title: "Edit freely", desc: "Touch up words, add a title, or polish fragments anytime." },
-  { icon: Tag, bg: "#64dfd0", title: "Tag the mood", desc: "Moods and themes power your subconscious pattern map." },
-];
 
 export default function NewDreamPage() {
   return (
@@ -51,7 +46,7 @@ export default function NewDreamPage() {
               Record tonight&apos;s dream
             </h1>
             <p className="text-sm font-semibold leading-relaxed text-[#bad4f7]">
-              Speak or write while it&apos;s still fresh — details fade within minutes of waking. Tap the mic to record or switch to typing anytime.
+              Speak, type, or import an existing document while it&apos;s still fresh — details fade within minutes of waking. Tap the mic, switch to typing, or drop a file anytime.
             </p>
           </div>
 
@@ -65,21 +60,8 @@ export default function NewDreamPage() {
         </div>
       </section>
 
-      {/* Recall tips - w-full */}
-      <section className="grid w-full shrink-0 gap-3 sm:grid-cols-3">
-        {TIPS.map(({ icon: Icon, bg, title, desc }, idx) => (
-          <div
-            key={title}
-            className={`jr-card jr-lift fade-in-scale flex flex-col gap-2 rounded-2xl bg-[#152c57] p-4 stagger-${idx + 1}`}
-          >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-[#081326] shadow-[0_2px_0_0_#081326]" style={{ backgroundColor: bg }}>
-              <Icon size={18} className="text-[#081326]" strokeWidth={2.5} />
-            </span>
-            <h2 className="text-sm font-extrabold text-white">{title}</h2>
-            <p className="text-xs font-semibold leading-relaxed text-[#9bc0ed]">{desc}</p>
-          </div>
-        ))}
-      </section>
+      {/* Recall & capture tips - w-full */}
+      <NewDreamTips />
 
       {/* The form - fills remaining height/width */}
       <div className="fade-in-scale stagger-3 flex w-full flex-1 flex-col">

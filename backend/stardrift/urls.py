@@ -13,5 +13,6 @@ def root_status(request):
 urlpatterns = [
     path("", root_status, name="root-status"),
     path("api/", include("dreams.urls")),
+    path("api/import/", include("imports.urls")),
 ]
 

@@ -148,3 +148,13 @@ export interface PaginatedResponse<T> {
   previous: string | null;
   results: T[];
 }
+
+export interface ImportPreviewResponse {
+  title: string;
+  body: string;
+  date: string | null;
+  source: "txt" | "docx" | "pdf" | string;
+  filename: string;
+  truncated: boolean;
+  warnings: string[];
+}
