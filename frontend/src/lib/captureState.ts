@@ -1,8 +1,8 @@
-export type CaptureMode = "speak" | "type";
+export type CaptureMode = "idle" | "speak" | "type" | "upload";
 
 export interface CaptureStateDetail {
   mode: CaptureMode;
-  isListening: boolean;
+  isListening?: boolean;
 }
 
 const EVENT_NAME = "stardrift-capture-state-change";

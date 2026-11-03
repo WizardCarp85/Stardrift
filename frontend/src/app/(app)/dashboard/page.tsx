@@ -395,12 +395,7 @@ export default function DashboardPage() {
 
   /* Cartoon Skeleton State */
   if (loading) {
-    return (
-      <div className={PAGE_SHELL} style={{ fontFamily: "'Quicksand', ui-rounded, 'Nunito', sans-serif" }}>
-        {sharedStyles}
-        <DreamLoader variant="full" message="Opening your nightbook…" />
-      </div>
-    );
+    return <DreamLoader variant="full" message="Opening your nightbook…" />;
   }
 
   return (
@@ -416,7 +411,6 @@ export default function DashboardPage() {
         />
 
         <CartoonCloud fill="#214685" className="pointer-events-none absolute -bottom-6 -right-8 hidden w-56 opacity-85 sm:block" />
-        <CartoonCloud fill="#1a3769" className="pointer-events-none absolute -top-7 right-40 hidden w-40 opacity-60 lg:block" />
         <CartoonSparkle size={16} color="#ffe082" className="pointer-events-none absolute right-12 top-8 opacity-90" />
         <CartoonSparkle size={12} color="#8fd0ff" className="pointer-events-none absolute right-36 top-16 hidden opacity-80 sm:block" />
         <CartoonSparkle size={11} color="#64dfd0" className="pointer-events-none absolute bottom-8 right-64 hidden opacity-75 md:block" />

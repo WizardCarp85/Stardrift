@@ -310,7 +310,7 @@ export function ImportDropzone({
               <p className="mt-0.5 text-xs font-semibold text-[#8eb0dc]">
                 {isUploading
                   ? "Extracting text, date, and title without saving…"
-                  : "Drag and drop or browse to pre-fill title and notes (up to 5 MB)"}
+                  : "Drag and drop or browse to pre-fill a dream entry (1 dream per file, up to 5 MB)"}
               </p>
             </div>
           </div>

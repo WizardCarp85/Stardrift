@@ -11,6 +11,7 @@ import {
   Plus,
   Mic,
   PenTool,
+  Upload,
   Sparkles,
   User as UserIcon,
   Settings,
@@ -106,26 +107,6 @@ function MiniSparkle({
   );
 }
 
-function SidebarCloud({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 220 80"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-hidden="true"
-    >
-      <path
-        d="M20 74H194C206.15 74 216 64.1503 216 52C216 40.81 207.64 31.57 196.82 30.18C193.32 15.35 180 4 164.1 4C151.66 4 140.78 10.77 134.96 20.81C129.82 16.61 123.25 14 116 14C100.63 14 88.02 25.61 86.39 40.55C82.84 38.25 78.62 36.9 74.08 36.9C61.29 36.9 50.9 47.29 50.9 60.08C50.9 60.93 50.95 61.77 51.03 62.6C41.32 63.25 10 66.5 10 70.5C10 72.78 14.48 74 20 74Z"
-        fill="#173260"
-        stroke="#081326"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -142,7 +123,9 @@ export function Sidebar() {
     setMounted(true);
     try {
       const saved = window.localStorage.getItem(SIDEBAR_STORAGE_KEY);
-      if (saved === "true") setCollapsed(true);
+      const isCol = saved === "true";
+      if (isCol) setCollapsed(true);
+      document.documentElement.style.setProperty("--app-sidebar-width", isCol ? "84px" : "256px");
     } catch {
       /* ignore storage errors */
     }
@@ -196,6 +179,9 @@ export function Sidebar() {
       } catch {
         /* ignore storage errors */
       }
+      if (typeof document !== "undefined") {
+        document.documentElement.style.setProperty("--app-sidebar-width", next ? "84px" : "256px");
+      }
       return next;
     });
   }
@@ -215,7 +201,7 @@ export function Sidebar() {
   const isNewDreamPage = pathname === "/journal/new";
 
   const [captureState, setCaptureState] = useState<CaptureStateDetail>({
-    mode: "speak",
+    mode: "idle",
     isListening: false,
   });
 
@@ -224,6 +210,12 @@ export function Sidebar() {
       setCaptureState(state);
     });
   }, []);
+
+  useEffect(() => {
+    if (!isNewDreamPage) {
+      setCaptureState({ mode: "idle", isListening: false });
+    }
+  }, [isNewDreamPage]);
 
   const actionButton = useMemo(() => {
     if (!isNewDreamPage) {
@@ -242,6 +234,24 @@ export function Sidebar() {
       };
     }
 
+    // 1. Upload Document chosen
+    if (captureState.mode === "upload") {
+      return {
+        bg: "bg-[#b89eff] hover:bg-[#cbb5ff] text-[#081326]",
+        ring: "focus-visible:ring-[#b89eff]",
+        badgeBg: "bg-white",
+        title: "Importing File",
+        subtitle: "Document upload active",
+        tooltip: "Importing File (Active)",
+        mobileLabel: "Upload",
+        mobileColor: "text-[#b89eff]",
+        mobileMedallionBg: "bg-[#b89eff] text-[#081326]",
+        icon: <Upload size={18} className="text-[#081326]" strokeWidth={2.6} />,
+        mobileIcon: <Upload size={22} strokeWidth={2.6} />,
+      };
+    }
+
+    // 2. Writing / Typing mode chosen
     if (captureState.mode === "type") {
       return {
         bg: "bg-[#64dfd0] hover:bg-[#78e8dc] text-[#081326]",
@@ -258,44 +268,62 @@ export function Sidebar() {
       };
     }
 
-    if (captureState.isListening) {
+    // 3. Voice recording mode chosen
+    if (captureState.mode === "speak") {
+      if (captureState.isListening) {
+        return {
+          bg: "bg-[#ff859d] hover:bg-[#ff9bb0] text-[#081326]",
+          ring: "focus-visible:ring-[#ff859d]",
+          badgeBg: "bg-white",
+          title: "Listening…",
+          subtitle: "Transcribing your voice…",
+          tooltip: "Listening to your voice…",
+          mobileLabel: "Listening",
+          mobileColor: "text-[#ff859d]",
+          mobileMedallionBg: "bg-[#ff859d] text-[#081326]",
+          icon: (
+            <span className="relative flex items-center justify-center">
+              <span className="absolute h-5 w-5 rounded-full bg-[#ff3366]/40 animate-ping" />
+              <Mic size={19} className="text-[#081326]" strokeWidth={2.8} />
+            </span>
+          ),
+          mobileIcon: (
+            <span className="relative flex items-center justify-center">
+              <span className="absolute h-6 w-6 rounded-full bg-[#ff3366]/40 animate-ping" />
+              <Mic size={24} strokeWidth={2.8} />
+            </span>
+          ),
+        };
+      }
+
       return {
-        bg: "bg-[#ff859d] hover:bg-[#ff9bb0] text-[#081326]",
-        ring: "focus-visible:ring-[#ff859d]",
+        bg: "bg-[#ffe082] hover:bg-[#ffea9f] text-[#081326]",
+        ring: "focus-visible:ring-[#ffe082]",
         badgeBg: "bg-white",
-        title: "Listening…",
-        subtitle: "Transcribing your voice…",
-        tooltip: "Listening to your voice…",
-        mobileLabel: "Listening",
-        mobileColor: "text-[#ff859d]",
-        mobileMedallionBg: "bg-[#ff859d] text-[#081326]",
-        icon: (
-          <span className="relative flex items-center justify-center">
-            <span className="absolute h-5 w-5 rounded-full bg-[#ff3366]/40 animate-ping" />
-            <Mic size={19} className="text-[#081326]" strokeWidth={2.8} />
-          </span>
-        ),
-        mobileIcon: (
-          <span className="relative flex items-center justify-center">
-            <span className="absolute h-6 w-6 rounded-full bg-[#ff3366]/40 animate-ping" />
-            <Mic size={24} strokeWidth={2.8} />
-          </span>
-        ),
+        title: "Voice Recording",
+        subtitle: "Voice mode active",
+        tooltip: "Voice Recording (Active)",
+        mobileLabel: "Voice",
+        mobileColor: "text-[#ffe082]",
+        mobileMedallionBg: "bg-[#ffe082] text-[#081326]",
+        icon: <Mic size={19} className="text-[#081326]" strokeWidth={2.6} />,
+        mobileIcon: <Mic size={24} strokeWidth={2.6} />,
       };
     }
 
+    // 4. On /journal/new but nothing selected yet (Hub screen)
     return {
-      bg: "bg-[#ffe082] hover:bg-[#ffea9f] text-[#081326]",
+      bg: "bg-[#5bb8ff] hover:bg-[#74c5ff] text-[#081326]",
       ring: "focus-visible:ring-[#ffe082]",
       badgeBg: "bg-white",
-      title: "Voice Recording",
-      subtitle: "Voice mode active",
-      tooltip: "Voice Recording (Active)",
-      mobileLabel: "Voice",
-      mobileColor: "text-[#ffe082]",
-      mobileMedallionBg: "bg-[#ffe082] text-[#081326]",
-      icon: <Mic size={19} className="text-[#081326]" strokeWidth={2.6} />,
-      mobileIcon: <Mic size={24} strokeWidth={2.6} />,
+      title: "New Dream",
+      subtitle: "Choose how to log",
+      tooltip: "New Dream (Select method)",
+      mobileLabel: "New Dream",
+      mobileColor: "text-[#7ac8ff]",
+      mobileMedallionBg: "bg-[#5bb8ff] text-[#081326]",
+      icon: <Plus size={20} className="text-[#081326]" strokeWidth={3} />,
+      mobileIcon: <Plus size={24} strokeWidth={3} />,
     };
   }, [isNewDreamPage, captureState]);
 
@@ -332,11 +360,11 @@ export function Sidebar() {
           width: 256px;
           flex-shrink: 0;
           background: linear-gradient(180deg, #0d1d3a 0%, #132952 52%, #0c1b36 100%);
-          border-right: 3px solid #081326;
-          box-shadow: 4px 0 0 0 rgba(8, 19, 38, 0.35), inset -1px 0 0 0 rgba(255, 255, 255, 0.08);
+          border-right: 2px solid #081326;
+          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.35), inset -1px 0 0 0 rgba(255, 255, 255, 0.08);
           transition: width 0.24s cubic-bezier(0.34, 1.3, 0.64, 1);
           overflow: visible;
-          z-index: 30;
+          z-index: 50;
         }
 
         .sidebar.cartoon-sidebar.collapsed {
@@ -438,7 +466,7 @@ export function Sidebar() {
             collapsed ? "justify-center" : ""
           }`}
         >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border-[2.5px] border-[#081326] bg-[#5bb8ff] shadow-[0_3px_0_0_#081326] group-hover:-rotate-6 transition-transform overflow-hidden">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border-[2.5px] border-[#081326] bg-[#5bb8ff] shadow-[0_3px_0_0_#081326] group-hover:scale-105 transition-transform overflow-hidden">
             <Image
               src="/logo.png"
               alt="Stardrift logo"
@@ -467,6 +495,11 @@ export function Sidebar() {
       <div className="px-3.5 pt-2 pb-4">
         <Link
           href="/journal/new"
+          onClick={() => {
+            if (isNewDreamPage) {
+              window.dispatchEvent(new CustomEvent("stardrift-new-dream-click"));
+            }
+          }}
           aria-current={isNewDreamPage ? "page" : undefined}
           className={`group relative flex items-center rounded-2xl cartoon-cta-new focus-visible:outline-none focus-visible:ring-2 ${actionButton.ring} ${actionButton.bg} ${
             collapsed ? "h-12 w-12 mx-auto justify-center" : "gap-3 px-3.5 py-2.5"
@@ -582,12 +615,8 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom Atmospheric Cloud + Dreamer Profile Pod */}
-      <div className="relative mt-auto px-3 pb-4 pt-6">
-        {!collapsed && (
-          <SidebarCloud className="pointer-events-none absolute -top-3 left-2 right-2 w-[92%] opacity-60" />
-        )}
-
+      {/* Bottom atmospheric container + Dreamer Profile Pod */}
+      <div className="relative mt-auto px-3 pb-4 pt-4">
         <div
           className={`group relative z-10 rounded-2xl border-[2.5px] border-[#081326] bg-[#0f2040] shadow-[0_4px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.08)] ${
             collapsed ? "p-2 flex flex-col items-center gap-2" : "p-3 flex items-center gap-2.5"
@@ -726,7 +755,7 @@ export function MobileTabBar() {
   const isNewDreamPage = pathname === "/journal/new";
 
   const [captureState, setCaptureState] = useState<CaptureStateDetail>({
-    mode: "speak",
+    mode: "idle",
     isListening: false,
   });
 
@@ -735,6 +764,12 @@ export function MobileTabBar() {
       setCaptureState(state);
     });
   }, []);
+
+  useEffect(() => {
+    if (!isNewDreamPage) {
+      setCaptureState({ mode: "idle", isListening: false });
+    }
+  }, [isNewDreamPage]);
 
   const actionButton = useMemo(() => {
     if (!isNewDreamPage) {
@@ -753,6 +788,24 @@ export function MobileTabBar() {
       };
     }
 
+    // 1. Upload Document chosen
+    if (captureState.mode === "upload") {
+      return {
+        bg: "bg-[#b89eff] hover:bg-[#cbb5ff] text-[#081326]",
+        ring: "focus-visible:ring-[#b89eff]",
+        badgeBg: "bg-white",
+        title: "Importing File",
+        subtitle: "Document upload active",
+        tooltip: "Importing File (Active)",
+        mobileLabel: "Upload",
+        mobileColor: "text-[#b89eff]",
+        mobileMedallionBg: "bg-[#b89eff] text-[#081326]",
+        icon: <Upload size={18} className="text-[#081326]" strokeWidth={2.6} />,
+        mobileIcon: <Upload size={22} strokeWidth={2.6} />,
+      };
+    }
+
+    // 2. Writing / Typing mode chosen
     if (captureState.mode === "type") {
       return {
         bg: "bg-[#64dfd0] hover:bg-[#78e8dc] text-[#081326]",
@@ -769,44 +822,62 @@ export function MobileTabBar() {
       };
     }
 
-    if (captureState.isListening) {
+    // 3. Voice recording mode chosen
+    if (captureState.mode === "speak") {
+      if (captureState.isListening) {
+        return {
+          bg: "bg-[#ff859d] hover:bg-[#ff9bb0] text-[#081326]",
+          ring: "focus-visible:ring-[#ff859d]",
+          badgeBg: "bg-white",
+          title: "Listening…",
+          subtitle: "Transcribing your voice…",
+          tooltip: "Listening to your voice…",
+          mobileLabel: "Listening",
+          mobileColor: "text-[#ff859d]",
+          mobileMedallionBg: "bg-[#ff859d] text-[#081326]",
+          icon: (
+            <span className="relative flex items-center justify-center">
+              <span className="absolute h-5 w-5 rounded-full bg-[#ff3366]/40 animate-ping" />
+              <Mic size={19} className="text-[#081326]" strokeWidth={2.8} />
+            </span>
+          ),
+          mobileIcon: (
+            <span className="relative flex items-center justify-center">
+              <span className="absolute h-6 w-6 rounded-full bg-[#ff3366]/40 animate-ping" />
+              <Mic size={24} strokeWidth={2.8} />
+            </span>
+          ),
+        };
+      }
+
       return {
-        bg: "bg-[#ff859d] hover:bg-[#ff9bb0] text-[#081326]",
-        ring: "focus-visible:ring-[#ff859d]",
+        bg: "bg-[#ffe082] hover:bg-[#ffea9f] text-[#081326]",
+        ring: "focus-visible:ring-[#ffe082]",
         badgeBg: "bg-white",
-        title: "Listening…",
-        subtitle: "Transcribing your voice…",
-        tooltip: "Listening to your voice…",
-        mobileLabel: "Listening",
-        mobileColor: "text-[#ff859d]",
-        mobileMedallionBg: "bg-[#ff859d] text-[#081326]",
-        icon: (
-          <span className="relative flex items-center justify-center">
-            <span className="absolute h-5 w-5 rounded-full bg-[#ff3366]/40 animate-ping" />
-            <Mic size={19} className="text-[#081326]" strokeWidth={2.8} />
-          </span>
-        ),
-        mobileIcon: (
-          <span className="relative flex items-center justify-center">
-            <span className="absolute h-6 w-6 rounded-full bg-[#ff3366]/40 animate-ping" />
-            <Mic size={24} strokeWidth={2.8} />
-          </span>
-        ),
+        title: "Voice Recording",
+        subtitle: "Voice mode active",
+        tooltip: "Voice Recording (Active)",
+        mobileLabel: "Voice",
+        mobileColor: "text-[#ffe082]",
+        mobileMedallionBg: "bg-[#ffe082] text-[#081326]",
+        icon: <Mic size={19} className="text-[#081326]" strokeWidth={2.6} />,
+        mobileIcon: <Mic size={24} strokeWidth={2.6} />,
       };
     }
 
+    // 4. On /journal/new but nothing selected yet (Hub screen)
     return {
-      bg: "bg-[#ffe082] hover:bg-[#ffea9f] text-[#081326]",
+      bg: "bg-[#5bb8ff] hover:bg-[#74c5ff] text-[#081326]",
       ring: "focus-visible:ring-[#ffe082]",
       badgeBg: "bg-white",
-      title: "Voice Recording",
-      subtitle: "Voice mode active",
-      tooltip: "Voice Recording (Active)",
-      mobileLabel: "Voice",
-      mobileColor: "text-[#ffe082]",
-      mobileMedallionBg: "bg-[#ffe082] text-[#081326]",
-      icon: <Mic size={19} className="text-[#081326]" strokeWidth={2.6} />,
-      mobileIcon: <Mic size={24} strokeWidth={2.6} />,
+      title: "New Dream",
+      subtitle: "Choose how to log",
+      tooltip: "New Dream (Select method)",
+      mobileLabel: "New Dream",
+      mobileColor: "text-[#7ac8ff]",
+      mobileMedallionBg: "bg-[#5bb8ff] text-[#081326]",
+      icon: <Plus size={20} className="text-[#081326]" strokeWidth={3} />,
+      mobileIcon: <Plus size={24} strokeWidth={3} />,
     };
   }, [isNewDreamPage, captureState]);
 
@@ -876,6 +947,11 @@ export function MobileTabBar() {
         <div className="flex flex-col items-center justify-end">
           <Link
             href="/journal/new"
+            onClick={() => {
+              if (isNewDreamPage) {
+                window.dispatchEvent(new CustomEvent("stardrift-new-dream-click"));
+              }
+            }}
             aria-label={actionButton.title}
             aria-current={isNewDreamPage ? "page" : undefined}
             className="group flex flex-col items-center gap-1 focus-visible:outline-none"

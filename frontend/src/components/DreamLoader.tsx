@@ -104,13 +104,13 @@ function DriftCloud({
   y,
   size,
   opacity,
-  direction,
+  direction = "right",
 }: {
   delay: number;
   y: string;
   size: number;
   opacity: number;
-  direction: "left" | "right";
+  direction?: "left" | "right";
 }) {
   return (
     <svg
@@ -223,10 +223,10 @@ function FullPageLoader({ message }: { message?: string }) {
       {/* Constellation dots */}
       <Constellation />
 
-      {/* Drifting clouds */}
-      <DriftCloud delay={0} y="62%" size={180} opacity={0.5} direction="right" />
-      <DriftCloud delay={4} y="72%" size={140} opacity={0.35} direction="left" />
-      <DriftCloud delay={8} y="80%" size={200} opacity={0.45} direction="right" />
+      {/* Drifting clouds smoothly spanning edge to edge */}
+      <DriftCloud delay={-3} y="62%" size={180} opacity={0.5} direction="right" />
+      <DriftCloud delay={-11} y="72%" size={140} opacity={0.35} direction="right" />
+      <DriftCloud delay={-19} y="80%" size={200} opacity={0.45} direction="right" />
 
       {/* Central focus */}
       <div className="dream-full-center">
@@ -306,20 +306,26 @@ function DreamLoaderStyles() {
 
       /* ---- Drifting clouds ---- */
       .dream-drift-cloud {
-        animation: dreamDriftRight 18s linear infinite;
+        position: absolute;
+        left: -260px;
+        pointer-events: none;
+        animation: dreamDriftRight 24s linear infinite;
+        animation-fill-mode: both;
       }
       .dream-drift-left {
+        left: auto;
+        right: -260px;
         animation-name: dreamDriftLeft;
       }
 
       @keyframes dreamDriftRight {
-        0% { left: -220px; }
-        100% { left: calc(100% + 20px); }
+        0% { left: -260px; }
+        100% { left: calc(100% + 40px); }
       }
 
       @keyframes dreamDriftLeft {
-        0% { right: -220px; left: auto; }
-        100% { right: calc(100% + 20px); left: auto; }
+        0% { right: -260px; }
+        100% { right: calc(100% + 40px); }
       }
 
       /* ---- Full page loader ---- */
@@ -331,6 +337,25 @@ function DreamLoaderStyles() {
         min-height: calc(100dvh - 5.5rem);
         width: 100%;
         overflow: hidden;
+      }
+
+      /* When inside the standard app content container, cancel out padding to go true full-bleed edge-to-edge */
+      .app-content .dream-full-loader {
+        width: calc(100% + 4rem);
+        margin: -1.5rem -2rem;
+        min-height: 100vh;
+        -webkit-mask-image: linear-gradient(to right, transparent 0px, black 32px, black calc(100% - 32px), transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0px, black 32px, black calc(100% - 32px), transparent 100%);
+      }
+
+      @media (max-width: 768px) {
+        .app-content .dream-full-loader {
+          width: calc(100% + 2rem);
+          margin: -1.25rem -1rem;
+          min-height: calc(100dvh - 64px);
+          -webkit-mask-image: linear-gradient(to right, transparent 0px, black 16px, black calc(100% - 16px), transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0px, black 16px, black calc(100% - 16px), transparent 100%);
+        }
       }
 
       .dream-full-bg {

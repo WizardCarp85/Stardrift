@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -34,7 +35,6 @@ import {
 import { VoiceRecorderButton } from "@/components/VoiceRecorder";
 import { CartoonDatePicker } from "@/components/CartoonDatePicker";
 import { CartoonDreamTypeSelect } from "@/components/CartoonDreamTypeSelect";
-import { ImportDropzone } from "@/components/ImportDropzone";
 import { emitCaptureState } from "@/lib/captureState";
 
 const MOOD_OPTIONS: Mood[] = [
@@ -86,10 +86,26 @@ interface DreamFormProps {
   initialData?: Partial<DreamFormData>;
   dreamId?: string;
   mode: "new" | "edit";
+  isModal?: boolean;
+  onClose?: () => void;
+  importedSummary?: {
+    filename: string;
+    warnings: string[];
+  } | null;
+  onClearImportedSummary?: () => void;
 }
 
-export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
+export function DreamForm({
+  initialData,
+  dreamId,
+  mode,
+  isModal = false,
+  onClose,
+  importedSummary,
+  onClearImportedSummary,
+}: DreamFormProps) {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [inputMode, setInputMode] = useState<"type" | "speak">(
     initialData?.input_method === "text" ? "type" : "speak"
   );
@@ -105,6 +121,10 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
   const [draftRestored, setDraftRestored] = useState(false);
   const initializedFromSettingsRef = useRef(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [form, setForm] = useState<DreamFormData>(() => ({
     title: "",
     body: "",
@@ -119,13 +139,42 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
     ...initialData,
   }));
 
+  useEffect(() => {
+    if (initialData) {
+      setForm((prev) => ({
+        ...prev,
+        ...initialData,
+      }));
+      if (initialData.input_method === "text") {
+        setInputMode("type");
+      }
+      if (initialData.body) {
+        handleBodyChange(initialData.body);
+      }
+    }
+  }, [initialData]);
+
   function update<K extends keyof DreamFormData>(key: K, value: DreamFormData[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
   useEffect(() => {
     emitCaptureState({ mode: inputMode, isListening: false });
+    return () => {
+      emitCaptureState({ mode: "idle", isListening: false });
+    };
   }, [inputMode]);
+
+  useEffect(() => {
+    if (!isModal || !onClose) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape" && !saving) {
+        onClose?.();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isModal, onClose, saving]);
 
   useEffect(() => {
     if (mode !== "new" || initializedFromSettingsRef.current) return;
@@ -260,37 +309,6 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
     handleBodyChange(text);
   }
 
-  function handleApplyImport(data: {
-    title: string;
-    body: string;
-    date: string | null;
-    action: "replace" | "append";
-    filename: string;
-    warnings: string[];
-  }) {
-    setForm((prev) => {
-      const combinedBody =
-        data.action === "append" && prev.body.trim()
-          ? `${prev.body.trim()}\n\n${data.body}`
-          : data.body;
-
-      return {
-        ...prev,
-        title: data.title || prev.title,
-        body: combinedBody,
-        dream_date: data.date || prev.dream_date,
-        input_method: "text",
-      };
-    });
-
-    setInputMode("type");
-    handleBodyChange(
-      data.action === "append" && form.body.trim()
-        ? `${form.body.trim()}\n\n${data.body}`
-        : data.body
-    );
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -318,7 +336,7 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
     }
   }
 
-  return (
+  const formContent = (
     <form
       onSubmit={handleSubmit}
       className="flex w-full flex-col gap-4 text-[#eef6ff]"
@@ -346,10 +364,15 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
           box-shadow: 0 0 0 3px rgba(91, 184, 255, 0.24), 0 0 16px rgba(91, 184, 255, 0.12);
         }
         .cartoon-form-btn-primary {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.45rem;
           background-color: #5bb8ff;
           color: #081326;
           border: 2.5px solid #081326;
           box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.45);
+          font-weight: 800;
           transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease;
         }
         .cartoon-form-btn-primary:hover:not(:disabled) {
@@ -365,35 +388,116 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 0.4rem;
+          gap: 0.45rem;
           white-space: nowrap;
           background-color: #162f5c;
           color: #eef6ff;
           border: 2.5px solid #081326;
           box-shadow: 0 4px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.14);
+          font-weight: 800;
           transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background-color 0.18s ease;
         }
-        .cartoon-form-btn-secondary:hover {
+        .cartoon-form-btn-secondary:hover:not(:disabled) {
           background-color: #1f417d;
           transform: translateY(-2px) scale(1.02);
           box-shadow: 0 6px 0 0 #081326, inset 0 2px 0 0 rgba(255, 255, 255, 0.22);
         }
-        .cartoon-form-btn-secondary:active {
+        .cartoon-form-btn-secondary:active:not(:disabled) {
           transform: translateY(2px) scale(0.98);
           box-shadow: 0 1px 0 0 #081326;
+        }
+        .cartoon-modal-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(91, 184, 255, 0.4) transparent;
+        }
+        .cartoon-modal-scroll::-webkit-scrollbar {
+          width: 6px;
+        }
+        .cartoon-modal-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .cartoon-modal-scroll::-webkit-scrollbar-thumb {
+          background: rgba(91, 184, 255, 0.35);
+          border-radius: 999px;
+        }
+        .cartoon-modal-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(91, 184, 255, 0.65);
         }
       `}</style>
 
       {/* Main Storybook Form Card */}
       <div className="cartoon-form-card rounded-[26px] bg-[#162e59] p-5 sm:p-6">
-        {/* Document Import Dropzone (available when creating a new dream) */}
-        {mode === "new" && (
-          <div className="mb-5 pb-5 border-b-2 border-[#081326]/50">
-            <ImportDropzone
-              currentBody={form.body}
-              onApplyImport={handleApplyImport}
-              disabled={saving}
-            />
+        {/* Modal Header (when rendered inside a popup) */}
+        {isModal && (
+          <div className="mb-4 flex items-center justify-between pb-3.5 border-b-2 border-[#081326]/50">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#5bb8ff] text-[#081326] shadow-[0_2px_0_0_#081326]">
+                <Mic size={18} strokeWidth={2.6} />
+              </span>
+              <div>
+                <h2 id="dream-modal-title" className="text-lg font-extrabold text-white sm:text-xl">
+                  {mode === "edit" ? "Edit Dream Entry" : "Record Tonight's Dream"}
+                </h2>
+                <p className="text-xs font-semibold text-[#8eb0dc]">
+                  Voice dictation or manual typing
+                </p>
+              </div>
+            </div>
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex h-8 w-8 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#0c1a36] text-[#cfe3fc] transition-all duration-200 hover:bg-[#183466] hover:rotate-90 hover:scale-105 active:scale-95 cursor-pointer"
+                aria-label="Close dialog"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Imported file banner if pre-filled via file import */}
+        {importedSummary && (
+          <div className="mb-4 flex flex-col gap-2 rounded-2xl border-2 border-[#081326] bg-gradient-to-r from-[#173a6a] to-[#122a52] p-4 text-[#eef6ff] shadow-[0_3px_0_0_#081326] animate-pop-in">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-2.5">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#64dfd0] text-[#081326] shadow-[0_2px_0_0_#081326]">
+                  <Check size={16} strokeWidth={2.8} />
+                </span>
+                <div>
+                  <p className="text-sm font-extrabold text-white">
+                    Imported from <span className="text-[#64dfd0]">{importedSummary.filename}</span>
+                  </p>
+                  <p className="text-xs font-semibold text-[#b8d5fa]">
+                    Check it and edit freely before saving.
+                  </p>
+                </div>
+              </div>
+              {onClearImportedSummary && (
+                <button
+                  type="button"
+                  onClick={onClearImportedSummary}
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-[#081326] bg-[#0c1a36] text-[#8bb4e8] transition-all duration-200 hover:bg-[#19325e] hover:text-white cursor-pointer"
+                  aria-label="Dismiss import message"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+
+            {importedSummary.warnings && importedSummary.warnings.length > 0 && (
+              <div className="mt-1 flex flex-col gap-1 border-t border-[#081326]/40 pt-2">
+                {importedSummary.warnings.map((warn, i) => (
+                  <div
+                    key={i}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#ffe082]/15 px-2.5 py-1 text-xs font-bold text-[#ffe082]"
+                  >
+                    <AlertTriangle size={13} className="shrink-0" />
+                    <span>{warn}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -409,8 +513,19 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
           <div
             role="tablist"
             aria-label="Recording mode"
-            className="inline-flex rounded-2xl border-[2.5px] border-[#081326] bg-[#0c1a36] p-1 shadow-[0_2px_0_0_#081326] select-none"
+            className="relative inline-flex items-center rounded-2xl border-[2.5px] border-[#081326] bg-[#0c1a36] p-1 shadow-[0_2px_0_0_#081326] select-none"
           >
+            {/* Sliding Pill Indicator */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-1 top-1 w-[calc(50%-4px)] rounded-xl border-2 border-[#081326] bg-[#5bb8ff] shadow-[0_2px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.45)]"
+              style={{
+                left: 4,
+                transform: inputMode === "speak" ? "translateX(0%)" : "translateX(100%)",
+                transition: "transform 0.24s cubic-bezier(0.34, 1.4, 0.64, 1)",
+              }}
+            />
+
             {(["speak", "type"] as const).map((m) => {
               const active = inputMode === m;
               return (
@@ -423,11 +538,10 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
                     setInputMode(m);
                     update("input_method", m === "speak" ? "voice" : "text");
                   }}
-                  className={`relative flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 ${
-                    active
-                      ? "bg-[#5bb8ff] text-[#081326] border-2 border-[#081326] shadow-[0_2px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.45)]"
-                      : "text-[#8cb2e0] hover:text-white hover:bg-white/5 border-2 border-transparent"
-                  }`}
+                  className="relative z-10 flex flex-1 items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition-colors duration-200 cursor-pointer"
+                  style={{
+                    color: active ? "#081326" : "#8cb2e0",
+                  }}
                 >
                   {m === "speak" ? (
                     <Mic
@@ -831,7 +945,7 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
           <button
             type="submit"
             disabled={saving}
-            className="cartoon-form-btn-primary inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-extrabold disabled:opacity-60"
+            className="cartoon-form-btn-primary inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-extrabold border-[2.5px] border-[#081326] bg-[#5bb8ff] text-[#081326] shadow-[0_4px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.45)] hover:bg-[#77c6ff] active:translate-y-0.5 active:shadow-[0_1px_0_0_#081326] disabled:opacity-60 cursor-pointer transition-all"
           >
             {saving ? (
               <>
@@ -845,14 +959,50 @@ export function DreamForm({ initialData, dreamId, mode }: DreamFormProps) {
             )}
           </button>
 
-          <Link
-            href="/journal"
-            className="cartoon-form-btn-secondary px-4 py-3 rounded-xl text-sm font-bold"
-          >
-            Cancel
-          </Link>
+          {isModal && onClose ? (
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={saving}
+              className="cartoon-form-btn-secondary px-5 py-3 rounded-xl text-sm font-bold border-[2.5px] border-[#081326] bg-[#162f5c] text-white shadow-[0_4px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.14)] hover:bg-[#1f417d] active:translate-y-0.5 active:shadow-[0_1px_0_0_#081326] cursor-pointer transition-all"
+            >
+              Cancel
+            </button>
+          ) : (
+            <Link
+              href="/journal"
+              className="cartoon-form-btn-secondary px-5 py-3 rounded-xl text-sm font-bold border-[2.5px] border-[#081326] bg-[#162f5c] text-white shadow-[0_4px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.14)] hover:bg-[#1f417d] active:translate-y-0.5 active:shadow-[0_1px_0_0_#081326] transition-all"
+            >
+              Cancel
+            </Link>
+          )}
         </div>
       </div>
     </form>
   );
+
+  if (isModal) {
+    if (!mounted) return null;
+    return createPortal(
+      <div
+        role="presentation"
+        className="fixed inset-y-0 right-0 left-0 md:left-[var(--app-sidebar-width,256px)] z-40 flex items-center justify-center p-3 sm:p-5 bg-[#040814]/75 backdrop-blur-md animate-pop-in transition-[left] duration-200"
+        onClick={(e) => {
+          if (e.target === e.currentTarget && !saving) onClose?.();
+        }}
+      >
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dream-modal-title"
+          className="relative w-full max-w-[760px] max-h-[90vh] overflow-y-auto rounded-[28px] cartoon-modal-scroll"
+        >
+          {formContent}
+        </div>
+      </div>,
+      document.body
+    );
+  }
+
+  return formContent;
 }

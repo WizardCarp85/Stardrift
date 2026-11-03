@@ -50,7 +50,7 @@ export function UploadRulesModal({
   const modalContent = (
     <div
       role="presentation"
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#040814]/80 p-4 backdrop-blur-md animate-pop-in"
+      className="fixed inset-y-0 right-0 left-0 md:left-[var(--app-sidebar-width,256px)] z-40 flex items-center justify-center p-3 sm:p-5 bg-[#040814]/75 backdrop-blur-md animate-pop-in transition-[left] duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -59,96 +59,107 @@ export function UploadRulesModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="upload-rules-title"
-        className="cartoon-form-card relative w-full max-w-lg rounded-[26px] bg-[#172d54] p-5 sm:p-6 text-[#eef6ff] shadow-[0_12px_36px_rgba(0,0,0,0.6),0_6px_0_0_#081326] max-h-[85vh] overflow-y-auto"
+        className="cartoon-form-card relative w-full max-w-2xl rounded-[26px] bg-[#162d58] p-5 sm:p-6 text-[#eef6ff] shadow-[0_16px_48px_rgba(0,0,0,0.7),0_6px_0_0_#081326]"
         style={{ fontFamily: "'Quicksand', ui-rounded, 'Nunito', sans-serif" }}
       >
         {/* Header */}
-        <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="mb-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#081326] bg-[#b89eff] text-[#081326] shadow-[0_3px_0_0_#081326]">
-              <FileText size={22} strokeWidth={2.6} />
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl border-2 border-[#081326] bg-[#b89eff] text-[#081326] shadow-[0_3px_0_0_#081326]">
+              <FileText size={20} strokeWidth={2.6} />
             </span>
             <div>
-              <h2 id="upload-rules-title" className="text-xl font-extrabold text-white">
+              <h2 id="upload-rules-title" className="text-lg font-extrabold text-white sm:text-xl">
                 File Import Guide
               </h2>
               <p className="text-xs font-semibold text-[#a5c6f3]">
-                Guidelines for uploading dream documents
+                Guidelines for uploading dream documents into Stardrift
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#0c1a36] text-[#cfe3fc] transition-all duration-200 hover:bg-[#183466] hover:rotate-90 hover:scale-105 active:scale-95"
+            className="flex h-8 w-8 items-center justify-center rounded-xl border-2 border-[#081326] bg-[#0c1a36] text-[#cfe3fc] transition-all duration-200 hover:bg-[#183466] hover:rotate-90 hover:scale-105 active:scale-95 cursor-pointer"
             aria-label="Close import rules dialog"
           >
             <X size={16} />
           </button>
         </div>
 
-        {/* Rules List */}
-        <div className="space-y-3 text-xs font-semibold">
+        {/* Rules Grid (2-Column Layout on sm+ for a single-page view with no scrollbars) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-semibold">
           {/* Formats & Size */}
-          <div className="flex items-start gap-3 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3.5 shadow-[0_2px_0_0_#081326]">
-            <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-[#64dfd0]" />
+          <div className="flex items-start gap-2.5 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3 shadow-[0_2px_0_0_#081326]">
+            <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-[#64dfd0]" />
             <div>
-              <p className="font-extrabold text-white">Supported Formats & Size Limit</p>
-              <p className="mt-0.5 text-[#b8d5fa] leading-relaxed">
+              <p className="text-xs font-extrabold text-white">Supported Formats & Size</p>
+              <p className="mt-0.5 text-[11px] font-semibold text-[#b8d5fa] leading-relaxed">
                 Accepts <strong className="text-white">.txt</strong>,{" "}
-                <strong className="text-white">.docx</strong> (Word), and{" "}
+                <strong className="text-white">.docx</strong>, and{" "}
                 <strong className="text-white">.pdf</strong> documents up to <strong className="text-white">5 MB</strong>.
               </p>
             </div>
           </div>
 
-          {/* Title & Date Detection */}
-          <div className="flex items-start gap-3 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3.5 shadow-[0_2px_0_0_#081326]">
-            <Sparkles size={18} className="mt-0.5 shrink-0 text-[#ffe082]" />
+          {/* One Dream Per File */}
+          <div className="flex items-start gap-2.5 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3 shadow-[0_2px_0_0_#081326]">
+            <FileText size={16} className="mt-0.5 shrink-0 text-[#b89eff]" />
             <div>
-              <p className="font-extrabold text-white">Automatic Title & Date Detection</p>
-              <p className="mt-0.5 text-[#b8d5fa] leading-relaxed">
-                The first line (under 80 chars, without an ending period) is used as your title. Dates in the first 3 lines are auto-detected.
+              <p className="text-xs font-extrabold text-white">One Dream per Document</p>
+              <p className="mt-0.5 text-[11px] font-semibold text-[#b8d5fa] leading-relaxed">
+                Each file is imported as a single dream entry. Multi-dream splitting is not supported yet.
+              </p>
+            </div>
+          </div>
+
+          {/* Title & Date Detection */}
+          <div className="flex items-start gap-2.5 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3 shadow-[0_2px_0_0_#081326]">
+            <Sparkles size={16} className="mt-0.5 shrink-0 text-[#ffe082]" />
+            <div>
+              <p className="text-xs font-extrabold text-white">Smart Title & Date Detection</p>
+              <p className="mt-0.5 text-[11px] font-semibold text-[#b8d5fa] leading-relaxed">
+                First line under 80 chars becomes the title; dates in the first 3 lines are auto-detected.
               </p>
             </div>
           </div>
 
           {/* PDF Page Cap */}
-          <div className="flex items-start gap-3 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3.5 shadow-[0_2px_0_0_#081326]">
-            <BookOpen size={18} className="mt-0.5 shrink-0 text-[#5bb8ff]" />
+          <div className="flex items-start gap-2.5 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3 shadow-[0_2px_0_0_#081326]">
+            <BookOpen size={16} className="mt-0.5 shrink-0 text-[#5bb8ff]" />
             <div>
-              <p className="font-extrabold text-white">30-Page PDF Limit</p>
-              <p className="mt-0.5 text-[#b8d5fa] leading-relaxed">
-                To keep reading fast and responsive, PDFs are read up to the first 30 pages. Extra pages are skipped with a notice.
+              <p className="text-xs font-extrabold text-white">30-Page PDF Cap</p>
+              <p className="mt-0.5 text-[11px] font-semibold text-[#b8d5fa] leading-relaxed">
+                PDFs are read up to the first 30 pages to keep processing snappy and prevent lag.
               </p>
             </div>
           </div>
 
           {/* Scanned & Password Protected PDFs */}
-          <div className="flex items-start gap-3 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3.5 shadow-[0_2px_0_0_#081326]">
-            <AlertCircle size={18} className="mt-0.5 shrink-0 text-[#ffb3c6]" />
+          <div className="flex items-start gap-2.5 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3 shadow-[0_2px_0_0_#081326]">
+            <AlertCircle size={16} className="mt-0.5 shrink-0 text-[#ffb3c6]" />
             <div>
-              <p className="font-extrabold text-white">Digital Text Only (No Scans or Passwords)</p>
-              <p className="mt-0.5 text-[#b8d5fa] leading-relaxed">
-                Documents must contain selectable digital text. Image-based scanned PDFs (OCR) and password-locked files are not supported.
+              <p className="text-xs font-extrabold text-white">Digital Text Only</p>
+              <p className="mt-0.5 text-[11px] font-semibold text-[#b8d5fa] leading-relaxed">
+                Must contain selectable text. Image scans (OCR) and password locks are not supported.
               </p>
             </div>
           </div>
 
           {/* Privacy & Zero-DB guarantee */}
-          <div className="flex items-start gap-3 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3.5 shadow-[0_2px_0_0_#081326]">
-            <ShieldCheck size={18} className="mt-0.5 shrink-0 text-[#64dfd0]" />
+          <div className="flex items-start gap-2.5 rounded-2xl border-2 border-[#081326] bg-[#0f2040] p-3 shadow-[0_2px_0_0_#081326]">
+            <ShieldCheck size={16} className="mt-0.5 shrink-0 text-[#64dfd0]" />
             <div>
-              <p className="font-extrabold text-white">Preview Only &amp; 100% Private</p>
-              <p className="mt-0.5 text-[#b8d5fa] leading-relaxed">
-                Processed strictly in-memory and deleted immediately. Nothing is saved to your account until you review and click <strong>Save Dream</strong>.
+              <p className="text-xs font-extrabold text-white">Preview Only &amp; 100% Private</p>
+              <p className="mt-0.5 text-[11px] font-semibold text-[#b8d5fa] leading-relaxed">
+                Processed in-memory. Nothing is saved to your account until you click <strong>Save Dream</strong>.
               </p>
             </div>
           </div>
         </div>
 
         {/* Footer with Checkbox & Actions */}
-        <div className="mt-5 flex flex-col gap-3 pt-4 border-t-2 border-[#081326]/50 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-4 flex flex-col gap-3 pt-3.5 border-t-2 border-[#081326]/50 sm:flex-row sm:items-center sm:justify-between">
           <label className="inline-flex items-center gap-2 cursor-pointer select-none text-xs font-bold text-[#b8d5fa] hover:text-white">
             <input
               type="checkbox"
@@ -159,18 +170,18 @@ export function UploadRulesModal({
             <span>Don&apos;t show this guide again</span>
           </label>
 
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-2.5">
             <button
               type="button"
               onClick={onClose}
-              className="cartoon-form-btn-secondary px-3.5 py-2 text-xs font-extrabold rounded-xl"
+              className="cartoon-form-btn-secondary px-4 py-2 text-xs font-extrabold rounded-xl border-[2.5px] border-[#081326] bg-[#162f5c] text-white shadow-[0_3px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.14)] hover:bg-[#1f417d] active:translate-y-0.5 active:shadow-[0_1px_0_0_#081326] transition-all cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleSelectFile}
-              className="cartoon-form-btn-primary inline-flex items-center gap-2 px-4 py-2 text-xs font-extrabold rounded-xl"
+              className="cartoon-form-btn-primary inline-flex items-center gap-2 px-4 py-2 text-xs font-extrabold rounded-xl border-[2.5px] border-[#081326] bg-[#5bb8ff] text-[#081326] shadow-[0_3px_0_0_#081326,inset_0_2px_0_0_rgba(255,255,255,0.45)] hover:bg-[#77c6ff] active:translate-y-0.5 active:shadow-[0_1px_0_0_#081326] transition-all cursor-pointer"
             >
               <Upload size={14} strokeWidth={2.4} />
               <span>Select File</span>

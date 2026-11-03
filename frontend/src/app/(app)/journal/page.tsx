@@ -207,15 +207,7 @@ export default function JournalPage() {
   const clearFilters = () => { setQ(""); setTypeFilter(""); setMoodFilter(""); };
 
   if (loading && dreams.length === 0) {
-    return (
-      <div
-        className="flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col"
-        style={{ fontFamily: JOURNAL_FONT }}
-      >
-        <JournalStyles />
-        <DreamLoader variant="full" message="Gathering your dreams…" />
-      </div>
-    );
+    return <DreamLoader variant="full" message="Gathering your dreams…" />;
   }
 
   return (

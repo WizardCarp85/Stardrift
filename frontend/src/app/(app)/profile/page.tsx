@@ -281,12 +281,7 @@ export default function ProfilePage() {
   }
 
   if (loading) {
-    return (
-      <div className="flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-4" style={{ fontFamily: FONT }}>
-        <Styles />
-        <DreamLoader variant="full" message="Gathering stardust…" />
-      </div>
-    );
+    return <DreamLoader variant="full" message="Gathering stardust…" />;
   }
 
   return (

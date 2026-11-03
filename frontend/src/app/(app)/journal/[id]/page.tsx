@@ -78,12 +78,7 @@ export default function DreamDetailPage() {
 
   /* Loading */
   if (loading) {
-    return (
-      <div className={PAGE_SHELL} style={{ fontFamily: JOURNAL_FONT }}>
-        <JournalStyles />
-        <DreamLoader variant="full" message="Weaving dream threads…" />
-      </div>
-    );
+    return <DreamLoader variant="full" message="Weaving dream threads…" />;
   }
 
   /* Not found */

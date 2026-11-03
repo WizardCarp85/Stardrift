@@ -354,15 +354,7 @@ function ChartEmptyState({ message }: { message: string }) {
 }
 
 function LoadingPage() {
-  return (
-    <div
-      className="flex h-full min-h-[calc(100dvh-5.5rem)] w-full flex-col gap-5 text-[#eef6ff]"
-      style={{ fontFamily: "'Quicksand', ui-rounded, 'Nunito', sans-serif" }}
-    >
-      <PatternsStyles />
-      <DreamLoader variant="full" message="Tuning into the cosmos…" />
-    </div>
-  );
+  return <DreamLoader variant="full" message="Tuning into the cosmos…" />;
 }
 
 export default function PatternsPage() {
@@ -540,7 +532,6 @@ export default function PatternsPage() {
           aria-hidden="true"
         />
         <CartoonCloud fill="#214685" className="pointer-events-none absolute -bottom-7 -right-8 hidden w-64 opacity-85 sm:block" />
-        <CartoonCloud fill="#1a3769" className="pointer-events-none absolute -top-9 right-52 hidden w-40 opacity-60 lg:block" />
         <CartoonSparkle size={17} color="#ffe082" className="pattern-twinkle pointer-events-none absolute right-10 top-8" />
         <CartoonSparkle size={12} color="#64dfd0" className="pattern-twinkle pointer-events-none absolute right-36 top-16 hidden sm:block" />
 
